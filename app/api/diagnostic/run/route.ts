@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import type { SkillScore, SkillTag } from "@/types";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = cookies();
@@ -16,8 +17,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json();
-    const userId = body.user_id || user.id;
+    // Always use authenticated user's ID — never trust body
+    const userId = user.id;
 
     // Get current skill scores
     const { data: skillScores } = await supabase

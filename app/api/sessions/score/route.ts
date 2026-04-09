@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
         session_id,
         question_id: r.question_id,
         user_answer: r.user_answer,
-        is_correct: question ? r.user_answer === question.correct_answer : false,
+        is_correct: question != null && r.user_answer != null && r.user_answer === question.correct_answer,
         time_taken_ms: r.time_taken_ms,
         skill_tag: question?.skill_tag || "word_meaning",
         difficulty: question?.difficulty || "medium",

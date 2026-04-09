@@ -171,11 +171,21 @@ export async function assembleExam(
       .eq("validated", true);
 
     if (excludeIds.length > 0) {
-      query = query.not("id", "in", `(${excludeIds.join(",")})`);
+      // Sanitize: only keep valid UUID-formatted strings
+      const safeIds = excludeIds.filter((id) =>
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+      );
+      if (safeIds.length > 0) {
+        query = query.not("id", "in", `(${safeIds.join(",")})`);
+      }
     }
 
     const { data: sectionQuestions, error } = await query;
-    if (error || !sectionQuestions) continue;
+    if (error) {
+      console.error(`Failed to fetch ${sectionDef.section} questions:`, error);
+      continue;
+    }
+    if (!sectionQuestions || sectionQuestions.length === 0) continue;
 
     // Score and select questions by difficulty and frequency targets
     const selected = selectQuestions(

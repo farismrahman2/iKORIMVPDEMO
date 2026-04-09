@@ -18,6 +18,8 @@ export async function runDiagnostic(
   skillScores: SkillScore[],
   weightedScore: number
 ): Promise<DiagnosticResult> {
+  const safeWeightedScore = weightedScore || 0;
+
   const weakAreas = skillScores
     .filter((s) => s.percentage < WEAK_THRESHOLD)
     .map((s) => ({ skill_tag: s.skill_tag, score: s.percentage }));
@@ -26,23 +28,25 @@ export async function runDiagnostic(
     .filter((s) => s.percentage >= STRONG_THRESHOLD)
     .map((s) => ({ skill_tag: s.skill_tag, score: s.percentage }));
 
-  const passProbability = Math.min(100, Math.max(0, weightedScore));
-  const readinessBand = determineReadinessBand(weightedScore);
+  const passProbability = Math.min(100, Math.max(0, safeWeightedScore));
+  const readinessBand = determineReadinessBand(safeWeightedScore);
 
-  // Update user_skill_scores
-  for (const skill of skillScores) {
-    await supabase
-      .from("user_skill_scores")
-      .upsert(
-        {
-          user_id: userId,
-          skill_tag: skill.skill_tag,
-          score: skill.percentage,
-          attempts: skill.total,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "user_id,skill_tag" }
-      );
+  // Update user_skill_scores (skip if no scores to update)
+  if (skillScores.length > 0) {
+    for (const skill of skillScores) {
+      await supabase
+        .from("user_skill_scores")
+        .upsert(
+          {
+            user_id: userId,
+            skill_tag: skill.skill_tag,
+            score: skill.percentage,
+            attempts: skill.total,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "user_id,skill_tag" }
+        );
+    }
   }
 
   // Update user_weak_areas — clear old and insert new
