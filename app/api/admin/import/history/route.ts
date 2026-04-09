@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { createSupabaseServerClient, createServiceRoleClient } from "@/lib/supabase";
 import { isAdmin } from "@/lib/admin";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const cookieStore = cookies();
