@@ -174,7 +174,7 @@ export default function ImportPage() {
           value={jsonInput}
           onChange={(e) => setJsonInput(e.target.value)}
           placeholder='Paste your JSON here...\n\nExpected format:\n{\n  "type": "vocabulary" | "questions",\n  "batch_id": "batch_001",\n  "validated": true,\n  "items": [...]\n}'
-          className="w-full min-h-[400px] px-4 py-3 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body font-mono text-sm placeholder-gray-600 focus:outline-none focus:border-accent-orange resize-y"
+          className="w-full min-h-[400px] px-4 py-3 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body font-mono text-sm placeholder-gray-600 focus:outline-none focus:border-ikori-500 resize-y"
         />
       </div>
 

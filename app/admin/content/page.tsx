@@ -145,7 +145,7 @@ export default function ContentPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search..."
-            className="w-full pl-9 pr-3 py-2 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body text-sm focus:outline-none focus:border-accent-orange"
+            className="w-full pl-9 pr-3 py-2 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body text-sm focus:outline-none focus:border-ikori-500"
           />
         </div>
 
