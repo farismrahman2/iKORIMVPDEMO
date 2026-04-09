@@ -246,3 +246,39 @@ export interface Mission {
   estimated_minutes: number;
   completed: boolean;
 }
+
+// === Admin Types ===
+
+export interface ContentImportLog {
+  id: string;
+  batch_id: string;
+  content_type: "vocabulary" | "questions";
+  items_imported: number;
+  items_skipped: number;
+  items_errored: number;
+  imported_by: string | null;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export interface AudioGenerationLog {
+  id: string;
+  question_id: string;
+  audio_script: string;
+  speaker: string;
+  audio_url: string | null;
+  status: "pending" | "generating" | "uploaded" | "error";
+  error_message: string | null;
+  generated_by: string | null;
+  created_at: string;
+}
+
+export interface AdminStats {
+  total_users: number;
+  total_questions: number;
+  total_vocab: number;
+  validated_questions: number;
+  validated_vocab: number;
+  questions_by_section: Record<string, number>;
+  questions_with_audio: number;
+}

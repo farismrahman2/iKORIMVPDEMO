@@ -46,7 +46,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/vocab") ||
     pathname.startsWith("/flashcards") ||
     pathname.startsWith("/listening") ||
-    pathname.startsWith("/progress");
+    pathname.startsWith("/progress") ||
+    pathname.startsWith("/admin");
 
   if (!user && isProtectedPage) {
     const url = request.nextUrl.clone();
