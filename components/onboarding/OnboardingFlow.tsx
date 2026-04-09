@@ -24,6 +24,7 @@ const BAND_CONFIG: Record<
 export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowProps) {
   const [step, setStep] = useState<Step>("welcome");
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number | null>>({});
   const [results, setResults] = useState<{
@@ -45,6 +46,9 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
       const data = await res.json();
       if (data.questions && data.questions.length > 0) {
         setQuestions(data.questions);
+        if (data.session?.id) {
+          setSessionId(data.session.id);
+        }
         setStep("diagnostic");
       }
     } catch {
@@ -71,7 +75,7 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          session_id: questions[0]?.id ? "diagnostic" : "",
+          session_id: sessionId,
           responses,
         }),
       });

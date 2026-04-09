@@ -109,6 +109,12 @@ export default function VocabPage() {
         break;
     }
 
+    // Pad with fallback options if we don't have enough distractors
+    const fallbacks = ["---", "--", "-"];
+    while (distractorOptions.length < 3) {
+      distractorOptions.push(fallbacks[distractorOptions.length] || "---");
+    }
+
     const allOptions = [correctOption, ...distractorOptions];
     const shuffledOptions = allOptions.sort(() => Math.random() - 0.5);
     setOptions(shuffledOptions);

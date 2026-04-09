@@ -164,6 +164,7 @@ ALTER TABLE exam_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE exam_responses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE flashcard_state ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE listening_errors ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY user_own_profile ON user_profiles FOR ALL USING (auth.uid() = id);
 CREATE POLICY user_own_scores ON user_skill_scores FOR ALL USING (auth.uid() = user_id);
@@ -176,3 +177,5 @@ CREATE POLICY user_own_flashcards ON flashcard_state FOR ALL USING (auth.uid() =
 CREATE POLICY user_own_events ON user_events FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY public_questions ON questions FOR SELECT USING (validated = TRUE);
 CREATE POLICY public_vocab ON vocabulary FOR SELECT USING (validated = TRUE);
+CREATE POLICY anyone_insert_errors ON listening_errors FOR INSERT WITH CHECK (true);
+CREATE POLICY admin_read_errors ON listening_errors FOR SELECT USING (false);

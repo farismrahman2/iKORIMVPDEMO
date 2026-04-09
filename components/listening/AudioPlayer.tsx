@@ -76,6 +76,9 @@ export default function AudioPlayer({
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
+      // Stop playback on unmount
+      audio.pause();
+      audio.currentTime = 0;
     };
   }, [src, onError, questionId]);
 

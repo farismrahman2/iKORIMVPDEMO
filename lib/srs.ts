@@ -32,7 +32,7 @@ export function calculateNextReview(
     } else if (review_count === 1) {
       interval_days = 2;
     } else {
-      interval_days = Math.round(interval_days * ease_factor);
+      interval_days = Math.max(1, Math.round(interval_days * ease_factor));
     }
 
     // Update ease factor with SM-2 formula
@@ -41,6 +41,9 @@ export function calculateNextReview(
       ease_factor + (0.1 - (5 - score) * (0.08 + (5 - score) * 0.02))
     );
   }
+
+  // Ensure interval is always at least 1
+  interval_days = Math.max(1, interval_days);
 
   const nextReview = new Date();
   nextReview.setDate(nextReview.getDate() + interval_days);

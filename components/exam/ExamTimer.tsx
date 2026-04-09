@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Clock } from "lucide-react";
 
 interface ExamTimerProps {
@@ -15,19 +15,26 @@ export default function ExamTimer({
   isPaused = false,
 }: ExamTimerProps) {
   const [remaining, setRemaining] = useState(totalSeconds);
+  const onTimeUpRef = useRef(onTimeUp);
+  const firedRef = useRef(false);
 
-  const handleTimeUp = useCallback(() => {
-    onTimeUp();
+  // Keep callback ref up to date without causing re-renders
+  useEffect(() => {
+    onTimeUpRef.current = onTimeUp;
   }, [onTimeUp]);
 
   useEffect(() => {
-    if (isPaused || remaining <= 0) return;
+    if (isPaused || firedRef.current) return;
 
     const interval = setInterval(() => {
       setRemaining((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          handleTimeUp();
+          if (!firedRef.current) {
+            firedRef.current = true;
+            // Defer callback to avoid calling during state update
+            setTimeout(() => onTimeUpRef.current(), 0);
+          }
           return 0;
         }
         return prev - 1;
@@ -35,7 +42,7 @@ export default function ExamTimer({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isPaused, remaining, handleTimeUp]);
+  }, [isPaused]);
 
   const minutes = Math.floor(remaining / 60);
   const seconds = remaining % 60;

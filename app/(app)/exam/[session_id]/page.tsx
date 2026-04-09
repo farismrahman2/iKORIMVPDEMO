@@ -44,14 +44,15 @@ export default function ExamSessionPage() {
         return;
       }
 
-      // Fetch questions through the API — for now get from session data
+      // Assemble questions for this session
+      // Note: questions are assembled fresh per page load. For production,
+      // consider storing question IDs with the session to preserve exam state.
       const res = await fetch("/api/questions/assemble", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           exam_type: session.exam_type,
           section_filter: session.section_filter,
-          user_id: session.user_id,
         }),
       });
 

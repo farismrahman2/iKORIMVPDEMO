@@ -1,25 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { createSupabaseServerClient } from "@/lib/supabase";
 import { assembleExam } from "@/lib/exam-assembler";
 import type { AssembleRequest } from "@/types";
 
 export async function POST(request: NextRequest) {
   try {
-    const body: AssembleRequest = await request.json();
-    const { exam_type, section_filter, user_id } = body;
+    const cookieStore = cookies();
+    const supabase = createSupabaseServerClient(cookieStore);
 
-    if (!exam_type || !user_id) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body: AssembleRequest = await request.json();
+    const { exam_type, section_filter } = body;
+
+    if (!exam_type) {
       return NextResponse.json(
-        { error: "exam_type and user_id are required" },
+        { error: "exam_type is required" },
         { status: 400 }
       );
     }
 
-    const cookieStore = cookies();
+    // Always use the authenticated user's ID, not the body's user_id
     const { blueprint, questions } = await assembleExam(
       cookieStore,
       exam_type,
-      user_id,
+      user.id,
       section_filter
     );
 
