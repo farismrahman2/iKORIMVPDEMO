@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { createClientComponentClient } from "@/lib/supabase";
+import { useLanguage } from "@/lib/language-context";
 import ExamTimer from "@/components/exam/ExamTimer";
 import QuestionCard from "@/components/exam/QuestionCard";
 import ProgressBar from "@/components/exam/ProgressBar";
@@ -18,6 +19,7 @@ interface Answer {
 export default function ExamSessionPage() {
   const params = useParams();
   const router = useRouter();
+  const { t } = useLanguage();
   const sessionId = params.session_id as string;
 
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -172,7 +174,7 @@ export default function ExamSessionPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-ikori-white">
-        <div className="animate-pulse text-ikori-muted">Loading exam...</div>
+        <div className="animate-pulse text-ikori-muted">{t('loading')}</div>
       </div>
     );
   }
@@ -180,12 +182,12 @@ export default function ExamSessionPage() {
   if (questions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen px-4 bg-ikori-white">
-        <p className="text-ikori-muted mb-4">No questions available for this exam.</p>
+        <p className="text-ikori-muted mb-4">{t('error')}</p>
         <button
           onClick={() => router.push("/exam")}
           className="btn-primary"
         >
-          Back to Exams
+          {t('back')}
         </button>
       </div>
     );
@@ -205,13 +207,14 @@ export default function ExamSessionPage() {
           />
           <button
             onClick={toggleFlag}
-            className={`p-2 rounded-ikori-sm transition-colors ${
+            className={`flex items-center gap-1 p-2 rounded-ikori-sm transition-colors text-xs ${
               flagged.has(question.id)
                 ? "text-amber-500 bg-amber-50"
                 : "text-ikori-muted hover:text-ikori-body"
             }`}
           >
             <Flag size={18} />
+            <span className="hidden sm:inline">{flagged.has(question.id) ? t('flagged') : t('flag_review')}</span>
           </button>
         </div>
       </div>
@@ -243,7 +246,7 @@ export default function ExamSessionPage() {
             className="flex-1 flex items-center justify-center gap-1 py-3 rounded-full border border-ikori-border text-ikori-body hover:text-ikori-dark transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <ChevronLeft size={18} />
-            Previous
+            {t('previous')}
           </button>
 
           {currentIdx === questions.length - 1 ? (
@@ -252,14 +255,14 @@ export default function ExamSessionPage() {
               disabled={submitting}
               className="flex-1 py-3 rounded-full bg-ikori-500 text-white font-semibold hover:bg-ikori-600 transition-colors disabled:opacity-50"
             >
-              {submitting ? "Submitting..." : "Submit Exam"}
+              {submitting ? `${t('submit')}...` : t('submit')}
             </button>
           ) : (
             <button
               onClick={goToNext}
               className="flex-1 flex items-center justify-center gap-1 py-3 rounded-full bg-ikori-500 text-white font-semibold hover:bg-ikori-600 transition-colors"
             >
-              Next
+              {t('next')}
               <ChevronRight size={18} />
             </button>
           )}
@@ -267,8 +270,8 @@ export default function ExamSessionPage() {
 
         {/* Answered count */}
         <p className="text-center text-ikori-muted text-sm mt-4">
-          {answeredCount} of {questions.length} answered
-          {flagged.size > 0 && ` | ${flagged.size} flagged`}
+          {t('answered_of', { done: answeredCount, total: questions.length })}
+          {flagged.size > 0 && ` | ${t('n_flagged', { count: flagged.size })}`}
         </p>
       </div>
 
@@ -276,13 +279,11 @@ export default function ExamSessionPage() {
       {showConfirm && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
           <div className="bg-white rounded-ikori shadow-ikori-md p-6 max-w-sm w-full">
-            <h3 className="text-lg font-semibold text-ikori-dark mb-2">Submit Exam?</h3>
+            <h3 className="text-lg font-semibold text-ikori-dark mb-2">{t('confirm_submit')}</h3>
             <p className="text-ikori-body text-sm mb-4">
-              You&apos;ve answered {answeredCount} of {questions.length} questions.
               {questions.length - answeredCount > 0 && (
                 <span className="text-amber-500 font-medium">
-                  {" "}
-                  {questions.length - answeredCount} unanswered.
+                  {t('unanswered_warning', { count: questions.length - answeredCount })}
                 </span>
               )}
             </p>
@@ -291,7 +292,7 @@ export default function ExamSessionPage() {
                 onClick={() => setShowConfirm(false)}
                 className="btn-secondary flex-1"
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 onClick={() => {
@@ -300,7 +301,7 @@ export default function ExamSessionPage() {
                 }}
                 className="flex-1 py-3 rounded-full bg-ikori-500 text-white font-semibold hover:bg-ikori-600 transition-colors"
               >
-                Submit
+                {t('yes_submit')}
               </button>
             </div>
           </div>

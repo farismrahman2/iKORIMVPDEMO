@@ -1,18 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClientComponentClient } from "@/lib/supabase";
+import { useLanguage } from "@/lib/language-context";
 import type { Vocabulary } from "@/types";
 import { Volume2, CheckCircle, XCircle } from "lucide-react";
 
 type VocabMode = "recognition" | "recall" | "reading" | "usage";
-
-const MODES: { key: VocabMode; label: string; desc: string }[] = [
-  { key: "recognition", label: "Recognition", desc: "JP → BN" },
-  { key: "recall", label: "Recall", desc: "BN → JP" },
-  { key: "reading", label: "Reading", desc: "Kanji → Kana" },
-  { key: "usage", label: "Usage", desc: "Context" },
-];
 
 const CATEGORIES = [
   "all",
@@ -29,6 +23,15 @@ const CATEGORIES = [
 ];
 
 export default function VocabPage() {
+  const { t, lang } = useLanguage();
+
+  const MODES: { key: VocabMode; label: string; desc: string }[] = [
+    { key: "recognition", label: t('recognition'), desc: t('jp_to_en') },
+    { key: "recall", label: t('recall'), desc: t('en_to_jp') },
+    { key: "reading", label: t('reading'), desc: t('kanji_to_kana') },
+    { key: "usage", label: t('usage'), desc: t('context') },
+  ];
+
   const [mode, setMode] = useState<VocabMode>("recognition");
   const [category, setCategory] = useState("all");
   const [difficulty, setDifficulty] = useState(0);
@@ -92,8 +95,8 @@ export default function VocabPage() {
 
     switch (currentMode) {
       case "recognition":
-        correctOption = word.meaning_bn;
-        distractorOptions = distractors.map((d) => d.meaning_bn);
+        correctOption = lang === 'bn' ? word.meaning_bn : word.meaning_en;
+        distractorOptions = distractors.map((d) => lang === 'bn' ? d.meaning_bn : d.meaning_en);
         break;
       case "recall":
         correctOption = `${word.word} (${word.kana})`;
@@ -151,7 +154,7 @@ export default function VocabPage() {
       case "recognition":
         return `${word.word} (${word.kana})`;
       case "recall":
-        return word.meaning_bn;
+        return lang === 'bn' ? word.meaning_bn : word.meaning_en;
       case "reading":
         return word.kanji || word.word;
       case "usage":
@@ -170,23 +173,7 @@ export default function VocabPage() {
   if (sessionDone) {
     const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
     return (
-      <div className="px-4 py-6 bg-ikori-white min-h-screen">
-        <h1 className="text-2xl font-bold font-display text-ikori-dark mb-6">Session Complete</h1>
-        <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-6 text-center mb-6">
-          <div className="bg-ikori-gradient-subtle rounded-ikori p-6">
-            <p className="text-4xl font-bold text-ikori-500">{pct}%</p>
-            <p className="text-ikori-muted mt-2 font-sans">
-              {correct} / {total} correct
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={loadWords}
-          className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans"
-        >
-          Practice Again
-        </button>
-      </div>
+      <VocabSessionComplete pct={pct} correct={correct} total={total} onPracticeAgain={loadWords} t={t} />
     );
   }
 
@@ -194,7 +181,7 @@ export default function VocabPage() {
 
   return (
     <div className="px-4 py-6 bg-ikori-white min-h-screen">
-      <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">Vocabulary</h1>
+      <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">{t('vocabulary')}</h1>
 
       {/* Mode selector */}
       <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
@@ -227,7 +214,7 @@ export default function VocabPage() {
         >
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>
-              {c === "all" ? "All Categories" : c.replace(/_/g, " ")}
+              {c === "all" ? t('all_categories') : c.replace(/_/g, " ")}
             </option>
           ))}
         </select>
@@ -236,10 +223,10 @@ export default function VocabPage() {
           onChange={(e) => setDifficulty(Number(e.target.value))}
           className="input"
         >
-          <option value={0}>All Levels</option>
-          <option value={1}>Easy</option>
-          <option value={2}>Medium</option>
-          <option value={3}>Hard</option>
+          <option value={0}>{t('all_levels')}</option>
+          <option value={1}>{t('easy_level')}</option>
+          <option value={2}>{t('medium_level')}</option>
+          <option value={3}>{t('hard_level')}</option>
         </select>
       </div>
 
@@ -249,7 +236,7 @@ export default function VocabPage() {
           Question {currentIdx + 1} / {Math.min(words.length, 20)}
         </span>
         <span>
-          {correct} / {total} correct
+          {correct} / {total} {t('correct')}
         </span>
       </div>
 
@@ -262,7 +249,7 @@ export default function VocabPage() {
             </p>
             {mode === "usage" && (
               <p className="text-sm text-ikori-muted mt-2 font-sans">
-                Fill in the blank
+                {t('fill_blank')}
               </p>
             )}
             {word.audio_url && (
@@ -320,9 +307,9 @@ export default function VocabPage() {
               <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
                 <p className="text-sm text-ikori-body font-sans">
                   <span className="font-semibold text-ikori-dark">{word.word}</span>{" "}
-                  ({word.kana}) — {word.meaning_en}
+                  ({word.kana}) — {lang === 'bn' ? word.meaning_bn : word.meaning_en}
                 </p>
-                <p className="text-sm text-ikori-muted mt-1 font-sans">{word.meaning_bn}</p>
+                <p className="text-sm text-ikori-muted mt-1 font-sans">{lang === 'bn' ? word.meaning_en : word.meaning_bn}</p>
                 {word.example_sentence_jp && (
                   <p className="text-sm text-ikori-body mt-2 italic font-sans">
                     {word.example_sentence_jp}
@@ -334,7 +321,7 @@ export default function VocabPage() {
                 onClick={nextQuestion}
                 className="btn-primary w-full py-3 rounded-ikori-sm font-semibold font-sans"
               >
-                Next
+                {t('next')}
               </button>
             </div>
           )}
@@ -343,9 +330,55 @@ export default function VocabPage() {
 
       {words.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-ikori-muted font-sans">No vocabulary items found for this filter.</p>
+          <p className="text-ikori-muted font-sans">{t('no_vocab')}</p>
         </div>
       )}
+    </div>
+  );
+}
+
+function VocabSessionComplete({
+  pct,
+  correct,
+  total,
+  onPracticeAgain,
+  t,
+}: {
+  pct: number;
+  correct: number;
+  total: number;
+  onPracticeAgain: () => void;
+  t: (key: import("@/lib/i18n").TranslationKey, params?: Record<string, string | number>) => string;
+}) {
+  const missionFired = useRef(false);
+
+  useEffect(() => {
+    if (missionFired.current) return;
+    missionFired.current = true;
+    fetch('/api/missions/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mission_type: 'vocab_drill' }),
+    });
+  }, []);
+
+  return (
+    <div className="px-4 py-6 bg-ikori-white min-h-screen">
+      <h1 className="text-2xl font-bold font-display text-ikori-dark mb-6">{t('session_complete')}</h1>
+      <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-6 text-center mb-6">
+        <div className="bg-ikori-gradient-subtle rounded-ikori p-6">
+          <p className="text-4xl font-bold text-ikori-500">{pct}%</p>
+          <p className="text-ikori-muted mt-2 font-sans">
+            {correct} / {total} {t('correct')}
+          </p>
+        </div>
+      </div>
+      <button
+        onClick={onPracticeAgain}
+        className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans"
+      >
+        {t('practice_again')}
+      </button>
     </div>
   );
 }

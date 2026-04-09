@@ -58,8 +58,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
-        display: ["Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
+        sans: ["Inter", "Noto Sans Bengali", "system-ui", "-apple-system", "sans-serif"],
+        display: ["Plus Jakarta Sans", "Noto Sans Bengali", "Inter", "system-ui", "sans-serif"],
       },
       borderRadius: {
         ikori: "12px",

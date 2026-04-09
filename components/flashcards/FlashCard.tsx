@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/lib/language-context";
 import type { Vocabulary } from "@/types";
 import { Volume2 } from "lucide-react";
 
@@ -12,6 +13,7 @@ interface FlashCardProps {
 }
 
 export default function FlashCard({ word, mode }: FlashCardProps) {
+  const { t, lang } = useLanguage();
   const [flipped, setFlipped] = useState(false);
 
   function getFront() {
@@ -26,8 +28,8 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
       case "reverse":
         return (
           <div className="text-center">
-            <p className="text-2xl font-bold text-ikori-dark">{word.meaning_bn}</p>
-            <p className="text-lg text-ikori-muted mt-1">{word.meaning_en}</p>
+            <p className="text-2xl font-bold text-ikori-dark">{lang === 'bn' ? word.meaning_bn : word.meaning_en}</p>
+            <p className="text-lg text-ikori-muted mt-1">{lang === 'bn' ? word.meaning_en : word.meaning_bn}</p>
           </div>
         );
       case "context":
@@ -36,7 +38,7 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
             <p className="text-xl text-ikori-dark leading-relaxed">
               {word.example_sentence_jp.replace(word.word, "______")}
             </p>
-            <p className="text-sm text-ikori-muted mt-3">What word fills the blank?</p>
+            <p className="text-sm text-ikori-muted mt-3">{t('fill_blank')}</p>
           </div>
         );
     }
@@ -47,8 +49,8 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
       case "classic":
         return (
           <div className="text-center space-y-3">
-            <p className="text-xl font-bold text-ikori-700">{word.meaning_bn}</p>
-            <p className="text-lg text-ikori-body">{word.meaning_en}</p>
+            <p className="text-xl font-bold text-ikori-700">{lang === 'bn' ? word.meaning_bn : word.meaning_en}</p>
+            <p className="text-lg text-ikori-body">{lang === 'bn' ? word.meaning_en : word.meaning_bn}</p>
             <p className="text-sm text-ikori-muted italic">{word.example_sentence_jp}</p>
             {word.example_sentence_bn && (
               <p className="text-sm text-ikori-muted">{word.example_sentence_bn}</p>
@@ -68,7 +70,7 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
           <div className="text-center space-y-3">
             <p className="text-2xl font-bold text-ikori-700">{word.word}</p>
             <p className="text-lg text-ikori-muted">{word.kana}</p>
-            <p className="text-sm text-ikori-body">{word.meaning_bn}</p>
+            <p className="text-sm text-ikori-body">{lang === 'bn' ? word.meaning_bn : word.meaning_en}</p>
             <p className="text-sm text-ikori-muted italic">{word.example_sentence_jp}</p>
           </div>
         );
@@ -94,7 +96,7 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
           style={{ backfaceVisibility: "hidden" }}
         >
           {getFront()}
-          <p className="text-xs text-ikori-muted mt-6">Tap to flip</p>
+          <p className="text-xs text-ikori-muted mt-6">{t('tap_to_flip')}</p>
         </div>
 
         {/* Back */}

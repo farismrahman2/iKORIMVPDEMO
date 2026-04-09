@@ -9,24 +9,23 @@ import {
   Layers,
   Headphones,
 } from "lucide-react";
+import { LanguageProvider, useLanguage } from "@/lib/language-context";
+import type { TranslationKey } from "@/lib/i18n";
 
-const NAV_ITEMS = [
-  { href: "/dashboard", label: "Home", icon: LayoutDashboard },
-  { href: "/exam", label: "Exam", icon: FileText },
-  { href: "/vocab", label: "Vocab", icon: BookOpen },
-  { href: "/flashcards", label: "Cards", icon: Layers },
-  { href: "/listening", label: "Listen", icon: Headphones },
+const NAV_ITEMS: { href: string; labelKey: TranslationKey; icon: typeof LayoutDashboard }[] = [
+  { href: "/dashboard", labelKey: "nav_home", icon: LayoutDashboard },
+  { href: "/exam", labelKey: "nav_exam", icon: FileText },
+  { href: "/vocab", labelKey: "nav_vocab", icon: BookOpen },
+  { href: "/flashcards", labelKey: "nav_cards", icon: Layers },
+  { href: "/listening", labelKey: "nav_listen", icon: Headphones },
 ];
 
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AppContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
-  // Hide bottom nav during active exam sessions
-  const isExamSession = /^\/exam\/[^/]+$/.test(pathname) && !pathname.includes("/results/");
+  const isExamSession =
+    /^\/exam\/[^/]+$/.test(pathname) && !pathname.includes("/results/");
 
   return (
     <div className="min-h-screen bg-ikori-white pb-20">
@@ -49,7 +48,7 @@ export default function AppLayout({
                   }`}
                 >
                   <Icon size={22} strokeWidth={1.5} />
-                  <span className="text-[10px] font-medium">{item.label}</span>
+                  <span className="text-[10px] font-medium">{t(item.labelKey)}</span>
                 </Link>
               );
             })}
@@ -57,5 +56,17 @@ export default function AppLayout({
         </nav>
       )}
     </div>
+  );
+}
+
+export default function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <LanguageProvider>
+      <AppContent>{children}</AppContent>
+    </LanguageProvider>
   );
 }

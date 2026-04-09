@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/language-context";
 import type { ExamType, SectionType } from "@/types";
 import { Clock, Zap, FileText, BookOpen, PenLine, Headphones } from "lucide-react";
+import type { TranslationKey } from "@/lib/i18n";
 
 interface ExamOption {
   type: ExamType;
   section?: SectionType;
-  label: string;
-  description: string;
+  labelKey: TranslationKey;
+  descriptionKey: TranslationKey;
   questions: number;
   minutes: number;
   icon: typeof FileText;
@@ -19,8 +21,8 @@ interface ExamOption {
 const EXAM_OPTIONS: ExamOption[] = [
   {
     type: "full",
-    label: "Full Mock",
-    description: "Complete JLPT N5 simulation",
+    labelKey: "full_mock",
+    descriptionKey: "complete_jlpt",
     questions: 75,
     minutes: 75,
     icon: FileText,
@@ -29,8 +31,8 @@ const EXAM_OPTIONS: ExamOption[] = [
   {
     type: "section",
     section: "vocab",
-    label: "Vocab Only",
-    description: "Vocabulary section practice",
+    labelKey: "vocab_only",
+    descriptionKey: "vocab_section",
     questions: 25,
     minutes: 20,
     icon: BookOpen,
@@ -39,8 +41,8 @@ const EXAM_OPTIONS: ExamOption[] = [
   {
     type: "section",
     section: "grammar_reading",
-    label: "Grammar Only",
-    description: "Grammar & reading section",
+    labelKey: "grammar_only",
+    descriptionKey: "grammar_section",
     questions: 30,
     minutes: 25,
     icon: PenLine,
@@ -49,8 +51,8 @@ const EXAM_OPTIONS: ExamOption[] = [
   {
     type: "section",
     section: "listening",
-    label: "Listening Only",
-    description: "Listening section practice",
+    labelKey: "listening_only",
+    descriptionKey: "listening_section",
     questions: 20,
     minutes: 20,
     icon: Headphones,
@@ -58,8 +60,8 @@ const EXAM_OPTIONS: ExamOption[] = [
   },
   {
     type: "speed",
-    label: "Speed Drill",
-    description: "25 high-frequency items, fast pace",
+    labelKey: "speed_drill",
+    descriptionKey: "speed_desc",
     questions: 25,
     minutes: 15,
     icon: Zap,
@@ -70,6 +72,7 @@ const EXAM_OPTIONS: ExamOption[] = [
 export default function ExamPage() {
   const [creating, setCreating] = useState(false);
   const router = useRouter();
+  const { t } = useLanguage();
 
   async function startExam(option: ExamOption) {
     setCreating(true);
@@ -95,9 +98,9 @@ export default function ExamPage() {
 
   return (
     <div className="px-4 py-6 bg-ikori-white min-h-screen">
-      <h1 className="text-2xl font-display font-bold text-ikori-dark mb-2">Start Exam</h1>
+      <h1 className="text-2xl font-display font-bold text-ikori-dark mb-2">{t('start_exam')}</h1>
       <p className="text-ikori-muted text-sm mb-6">
-        Choose an exam type to begin practicing
+        {t('choose_exam')}
       </p>
 
       <div className="space-y-3">
@@ -106,7 +109,7 @@ export default function ExamPage() {
 
           return (
             <button
-              key={option.label}
+              key={option.labelKey}
               onClick={() => startExam(option)}
               disabled={creating}
               className="w-full flex items-start gap-4 bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 transition-all active:scale-[0.98] hover:shadow-ikori disabled:opacity-50"
@@ -115,13 +118,13 @@ export default function ExamPage() {
                 <Icon size={20} />
               </div>
               <div className="flex-1 text-left">
-                <p className="font-semibold text-ikori-dark">{option.label}</p>
-                <p className="text-xs text-ikori-muted mt-0.5">{option.description}</p>
+                <p className="font-semibold text-ikori-dark">{t(option.labelKey)}</p>
+                <p className="text-xs text-ikori-muted mt-0.5">{t(option.descriptionKey)}</p>
                 <div className="flex items-center gap-3 mt-2 text-xs text-ikori-muted">
-                  <span>{option.questions} questions</span>
+                  <span>{option.questions} {t('questions')}</span>
                   <span className="flex items-center gap-1">
                     <Clock size={12} />
-                    {option.minutes} min
+                    {option.minutes} {t('min')}
                   </span>
                 </div>
               </div>
@@ -134,7 +137,7 @@ export default function ExamPage() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
           <div className="bg-white rounded-ikori shadow-ikori-md p-6 text-center">
             <div className="w-8 h-8 border-2 border-ikori-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-ikori-body">Preparing your exam...</p>
+            <p className="text-ikori-body">{t('preparing_exam')}</p>
           </div>
         </div>
       )}

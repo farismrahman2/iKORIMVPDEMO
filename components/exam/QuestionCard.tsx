@@ -2,6 +2,7 @@
 
 import type { Question } from "@/types";
 import AudioPlayer from "@/components/listening/AudioPlayer";
+import { useLanguage } from "@/lib/language-context";
 
 interface QuestionCardProps {
   question: Question;
@@ -18,6 +19,7 @@ export default function QuestionCard({
   onSkip,
   showResult = false,
 }: QuestionCardProps) {
+  const { t } = useLanguage();
   const options = question.options as string[];
 
   return (
@@ -81,7 +83,7 @@ export default function QuestionCard({
           onClick={onSkip}
           className="text-sm text-ikori-muted hover:text-ikori-body transition-colors"
         >
-          Skip this question
+          {t('skip_question')}
         </button>
       )}
 

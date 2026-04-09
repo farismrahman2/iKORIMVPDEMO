@@ -1,6 +1,8 @@
 "use client";
 
 import type { SectionType } from "@/types";
+import { useLanguage } from "@/lib/language-context";
+import type { TranslationKey } from "@/lib/i18n";
 
 interface ProgressBarProps {
   current: number;
@@ -9,10 +11,10 @@ interface ProgressBarProps {
   sections?: { section: SectionType; count: number }[];
 }
 
-const SECTION_LABELS: Record<SectionType, string> = {
-  vocab: "Vocabulary",
-  grammar_reading: "Grammar & Reading",
-  listening: "Listening",
+const SECTION_LABEL_KEYS: Record<SectionType, TranslationKey> = {
+  vocab: "vocabulary",
+  grammar_reading: "grammar_reading",
+  listening: "listening",
 };
 
 export default function ProgressBar({
@@ -21,17 +23,18 @@ export default function ProgressBar({
   currentSection,
   sections,
 }: ProgressBarProps) {
+  const { t } = useLanguage();
   const percentage = total > 0 ? (current / total) * 100 : 0;
 
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center text-sm">
         <span className="text-ikori-muted">
-          {current} / {total}
+          {t('question_of', { n: current, total })}
         </span>
         {currentSection && (
           <span className="text-ikori-500 text-xs font-medium">
-            {SECTION_LABELS[currentSection]}
+            {t(SECTION_LABEL_KEYS[currentSection])}
           </span>
         )}
       </div>

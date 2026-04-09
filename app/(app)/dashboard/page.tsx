@@ -8,15 +8,18 @@ import SkillRadar from "@/components/dashboard/SkillRadar";
 import DailyMissions from "@/components/dashboard/DailyMissions";
 import type { UserProfile, SkillTag, Mission, ReadinessBand } from "@/types";
 import { Flame, FileText, Layers, BookOpen, Headphones } from "lucide-react";
+import { useLanguage } from "@/lib/language-context";
+import { getSkillLabel, TranslationKey } from "@/lib/i18n";
+import LanguageToggle from "@/components/LanguageToggle";
 
 const BAND_CONFIG: Record<
   ReadinessBand,
-  { label: string; color: string; bg: string }
+  { labelKey: TranslationKey; color: string; bg: string }
 > = {
-  strong: { label: "Strong Pass", color: "text-ikori-700", bg: "bg-ikori-50" },
-  probable: { label: "Probable Pass", color: "text-blue-700", bg: "bg-blue-50" },
-  borderline: { label: "Borderline", color: "text-amber-700", bg: "bg-amber-50" },
-  high_risk: { label: "High Risk", color: "text-red-700", bg: "bg-red-50" },
+  strong: { labelKey: "strong_pass", color: "text-ikori-700", bg: "bg-ikori-50" },
+  probable: { labelKey: "probable_pass", color: "text-blue-700", bg: "bg-blue-50" },
+  borderline: { labelKey: "borderline", color: "text-amber-700", bg: "bg-amber-50" },
+  high_risk: { labelKey: "high_risk", color: "text-red-700", bg: "bg-red-50" },
 };
 
 export default function DashboardPage() {
@@ -28,6 +31,7 @@ export default function DashboardPage() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const supabase = createClientComponentClient();
   const router = useRouter();
+  const { t, lang } = useLanguage();
 
   useEffect(() => {
     async function load() {
@@ -112,7 +116,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-ikori-white">
-        <div className="animate-pulse text-ikori-muted">Loading...</div>
+        <div className="animate-pulse text-ikori-muted">{t('loading')}</div>
       </div>
     );
   }
@@ -129,7 +133,7 @@ export default function DashboardPage() {
     );
   }
 
-  const greeting = getGreeting();
+  const greetingKey = getGreeting();
   const band = profile?.readiness_band as ReadinessBand | undefined;
   const bandConfig = band ? BAND_CONFIG[band] : null;
   const score = Math.round(profile?.pass_probability || 0);
@@ -139,14 +143,17 @@ export default function DashboardPage() {
       {/* Greeting + Streak */}
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-ikori-muted text-sm">{greeting}</p>
+          <p className="text-ikori-muted text-sm">{t(greetingKey)}</p>
           <h1 className="text-2xl font-display font-bold text-ikori-dark">
             {profile?.name || "Learner"}
           </h1>
         </div>
-        <div className="flex items-center gap-1 bg-ikori-50 border border-ikori-200 rounded-ikori-full px-3 py-2">
-          <Flame size={18} strokeWidth={1.5} className="text-ikori-500" />
-          <span className="font-bold text-ikori-dark">{profile?.streak || 0}</span>
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <div className="flex items-center gap-1 bg-ikori-50 border border-ikori-200 rounded-ikori-full px-3 py-2">
+            <Flame size={18} strokeWidth={1.5} className="text-ikori-500" />
+            <span className="font-bold text-ikori-dark">{profile?.streak || 0}</span>
+          </div>
         </div>
       </div>
 
@@ -155,11 +162,11 @@ export default function DashboardPage() {
         <div className="bg-ikori-gradient rounded-ikori p-5 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-ikori-800 text-sm font-medium">Your readiness</p>
+              <p className="text-ikori-800 text-sm font-medium">{t('your_readiness')}</p>
               <p className="text-ikori-900 text-3xl font-display font-bold">{score}%</p>
             </div>
             <div className="bg-white/60 backdrop-blur-sm rounded-ikori-full px-4 py-2">
-              <p className="text-ikori-800 text-sm font-semibold">{bandConfig.label}</p>
+              <p className="text-ikori-800 text-sm font-semibold">{t(bandConfig.labelKey)}</p>
             </div>
           </div>
           <div className="h-2 bg-white/30 rounded-full">
@@ -178,7 +185,7 @@ export default function DashboardPage() {
       {weakSkills.length > 0 && (
         <div className="card">
           <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3">
-            Weakest Skills
+            {t('weakest_skills')}
           </h3>
           <div className="space-y-2">
             {weakSkills.map((skill) => (
@@ -187,8 +194,8 @@ export default function DashboardPage() {
                 className="flex items-center justify-between p-2 rounded-ikori-sm hover:bg-ikori-surface cursor-pointer transition-colors"
                 onClick={() => router.push("/vocab")}
               >
-                <span className="text-sm text-ikori-body capitalize">
-                  {skill.skill_tag.replace(/_/g, " ")}
+                <span className="text-sm text-ikori-body">
+                  {getSkillLabel(skill.skill_tag, lang)}
                 </span>
                 <span className="text-sm font-medium text-red-500">
                   {Math.round(skill.score)}%
@@ -202,20 +209,20 @@ export default function DashboardPage() {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: "Take Mock", icon: FileText, href: "/exam", color: "bg-ikori-50 text-ikori-700" },
-          { label: "Flashcards", icon: Layers, href: "/flashcards", color: "bg-ikori-50 text-ikori-700" },
-          { label: "Vocab", icon: BookOpen, href: "/vocab", color: "bg-blue-50 text-blue-700" },
-          { label: "Listening", icon: Headphones, href: "/listening", color: "bg-ikori-cyan-50 text-ikori-cyan-500" },
+          { labelKey: "take_mock" as TranslationKey, icon: FileText, href: "/exam", color: "bg-ikori-50 text-ikori-700" },
+          { labelKey: "flashcards_label" as TranslationKey, icon: Layers, href: "/flashcards", color: "bg-ikori-50 text-ikori-700" },
+          { labelKey: "nav_vocab" as TranslationKey, icon: BookOpen, href: "/vocab", color: "bg-blue-50 text-blue-700" },
+          { labelKey: "nav_listen" as TranslationKey, icon: Headphones, href: "/listening", color: "bg-ikori-cyan-50 text-ikori-cyan-500" },
         ].map((action) => {
           const Icon = action.icon;
           return (
             <button
-              key={action.label}
+              key={action.labelKey}
               onClick={() => router.push(action.href)}
               className={`flex items-center gap-3 p-4 rounded-ikori border border-ikori-border shadow-ikori-sm ${action.color} transition-colors hover:opacity-80`}
             >
               <Icon size={18} strokeWidth={1.5} />
-              <span className="font-medium text-sm">{action.label}</span>
+              <span className="font-medium text-sm">{t(action.labelKey)}</span>
             </button>
           );
         })}
@@ -227,9 +234,9 @@ export default function DashboardPage() {
   );
 }
 
-function getGreeting() {
+function getGreeting(): TranslationKey {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 17) return "Good afternoon";
-  return "Good evening";
+  if (hour < 12) return "good_morning";
+  if (hour < 17) return "good_afternoon";
+  return "good_evening";
 }

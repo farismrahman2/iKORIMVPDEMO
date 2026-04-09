@@ -1,31 +1,16 @@
 "use client";
 
 import type { SkillTag } from "@/types";
+import { useLanguage } from "@/lib/language-context";
+import { getSkillLabel } from "@/lib/i18n";
 
 interface SkillRadarProps {
   skills: { skill_tag: SkillTag; score: number }[];
   onSkillClick?: (skill: SkillTag) => void;
 }
 
-const SHORT_LABELS: Record<string, string> = {
-  kana_recognition: "Kana",
-  kanji_reading: "Kanji",
-  word_meaning: "Meaning",
-  vocab_usage: "Usage",
-  particle: "Particle",
-  verb_form: "Verb",
-  adjective_form: "Adj.",
-  sentence_completion: "Sent.",
-  sentence_order: "Order",
-  short_reading: "Read",
-  notice_reading: "Notice",
-  listening_gist: "Gist",
-  listening_detail: "Detail",
-  listening_response: "Reply",
-  listening_sequence: "Seq.",
-};
-
 export default function SkillRadar({ skills, onSkillClick }: SkillRadarProps) {
+  const { t, lang } = useLanguage();
   const size = 300;
   const center = size / 2;
   const maxRadius = center - 50;
@@ -99,7 +84,7 @@ export default function SkillRadar({ skills, onSkillClick }: SkillRadarProps) {
   // Labels
   const labels = skills.map((s, i) => {
     const p = getPoint(i * angleStep, maxRadius + 25);
-    const label = SHORT_LABELS[s.skill_tag] || s.skill_tag;
+    const label = getSkillLabel(s.skill_tag, lang);
     const color = getColor(s.score);
 
     return (
@@ -142,7 +127,7 @@ export default function SkillRadar({ skills, onSkillClick }: SkillRadarProps) {
   return (
     <div className="card">
       <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3">
-        Skill Radar
+        {t('skill_breakdown')}
       </h3>
       <svg
         viewBox={`0 0 ${size} ${size}`}

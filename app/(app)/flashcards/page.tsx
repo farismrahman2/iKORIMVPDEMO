@@ -1,15 +1,19 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClientComponentClient } from "@/lib/supabase";
+import { useLanguage } from "@/lib/language-context";
 import FlashCard from "@/components/flashcards/FlashCard";
 import ConfidenceButtons from "@/components/flashcards/ConfidenceButtons";
 import { calculateNextReview } from "@/lib/srs";
 import type { FlashcardState, Vocabulary, Confidence } from "@/types";
+import type { TranslationKey } from "@/lib/i18n";
 
 type CardMode = "classic" | "reverse" | "context";
 
 export default function FlashcardsPage() {
+  const { t } = useLanguage();
+
   const [queue, setQueue] = useState<(FlashcardState & { vocabulary: Vocabulary })[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [cardMode, setCardMode] = useState<CardMode>("classic");
@@ -157,43 +161,21 @@ export default function FlashcardsPage() {
 
   if (allDone) {
     return (
-      <div className="px-4 py-6 bg-ikori-white min-h-screen">
-        <h1 className="text-2xl font-bold font-display text-ikori-dark mb-6">Flashcards</h1>
-
-        <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-8 text-center mb-6">
-          <div className="bg-ikori-gradient-subtle rounded-ikori p-6">
-            {reviewed > 0 ? (
-              <>
-                <p className="text-4xl font-bold text-ikori-500 mb-2 font-display">All done!</p>
-                <p className="text-ikori-muted font-sans">
-                  You reviewed {reviewed} card{reviewed !== 1 ? "s" : ""} today.
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="text-2xl font-bold text-ikori-dark mb-2 font-display">All caught up!</p>
-                <p className="text-ikori-muted font-sans">No cards due for review today.</p>
-              </>
-            )}
-          </div>
-        </div>
-
-        {activeCount < 50 && (
-          <button
-            onClick={addNewWords}
-            disabled={adding}
-            className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans disabled:opacity-50"
-          >
-            {adding ? "Adding..." : "Add 10 New Words"}
-          </button>
-        )}
-
-        <p className="text-center text-ikori-muted text-sm mt-4 font-sans">
-          {activeCount} active flashcards
-        </p>
-      </div>
+      <FlashcardsAllDone
+        reviewed={reviewed}
+        activeCount={activeCount}
+        adding={adding}
+        onAddNewWords={addNewWords}
+        t={t}
+      />
     );
   }
+
+  const MODE_LABELS: Record<CardMode, string> = {
+    classic: t('classic'),
+    reverse: t('reverse'),
+    context: t('context'),
+  };
 
   const card = queue[currentIdx];
   if (!card || !card.vocabulary) return null;
@@ -201,9 +183,9 @@ export default function FlashcardsPage() {
   return (
     <div className="px-4 py-6 bg-ikori-white min-h-screen">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold font-display text-ikori-dark">Flashcards</h1>
+        <h1 className="text-2xl font-bold font-display text-ikori-dark">{t('flashcards_label')}</h1>
         <span className="text-sm text-ikori-muted font-sans">
-          {queue.length - currentIdx} cards left
+          {t('cards_due', { count: queue.length - currentIdx })}
         </span>
       </div>
 
@@ -213,13 +195,13 @@ export default function FlashcardsPage() {
           <button
             key={m}
             onClick={() => setCardMode(m)}
-            className={`px-3 py-1.5 rounded-full text-sm capitalize transition-colors font-sans ${
+            className={`px-3 py-1.5 rounded-full text-sm transition-colors font-sans ${
               cardMode === m
                 ? "bg-ikori-500 text-white"
                 : "bg-ikori-50 text-ikori-body"
             }`}
           >
-            {m}
+            {MODE_LABELS[m]}
           </button>
         ))}
       </div>
@@ -231,9 +213,6 @@ export default function FlashcardsPage() {
 
       {/* Confidence buttons */}
       <div className="mb-4">
-        <p className="text-sm text-ikori-muted text-center mb-3 font-sans">
-          How well did you know this?
-        </p>
         <ConfidenceButtons onRate={handleRate} />
       </div>
 
@@ -246,6 +225,72 @@ export default function FlashcardsPage() {
           }}
         />
       </div>
+    </div>
+  );
+}
+
+function FlashcardsAllDone({
+  reviewed,
+  activeCount,
+  adding,
+  onAddNewWords,
+  t,
+}: {
+  reviewed: number;
+  activeCount: number;
+  adding: boolean;
+  onAddNewWords: () => void;
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
+}) {
+  const missionFired = useRef(false);
+
+  useEffect(() => {
+    if (missionFired.current) return;
+    missionFired.current = true;
+    fetch('/api/missions/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mission_type: 'flashcard_session' }),
+    });
+  }, []);
+
+  return (
+    <div className="px-4 py-6 bg-ikori-white min-h-screen">
+      <h1 className="text-2xl font-bold font-display text-ikori-dark mb-6">{t('flashcards_label')}</h1>
+
+      <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-8 text-center mb-6">
+        <div className="bg-ikori-gradient-subtle rounded-ikori p-6">
+          {reviewed > 0 ? (
+            <>
+              <p className="text-4xl font-bold text-ikori-500 mb-2 font-display">{t('session_complete')}</p>
+              <p className="text-ikori-muted font-sans">
+                {t('cards_reviewed', { count: reviewed } as Record<string, string | number>).replace(/\d+/, String(reviewed))}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-2xl font-bold text-ikori-dark mb-2 font-display">{t('all_caught_up')}</p>
+              <p className="text-ikori-muted font-sans">{t('come_back')}</p>
+            </>
+          )}
+        </div>
+      </div>
+
+      {activeCount < 50 && (
+        <button
+          onClick={onAddNewWords}
+          disabled={adding}
+          className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans disabled:opacity-50"
+        >
+          {adding ? t('loading') : t('add_new')}
+        </button>
+      )}
+
+      {reviewed > 0 && (
+        <p className="text-center text-ikori-muted text-sm mt-4 font-sans">
+          {activeCount} {t('flashcards_label')}
+        </p>
+      )}
     </div>
   );
 }

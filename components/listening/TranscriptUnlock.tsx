@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/lib/language-context";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface TranscriptUnlockProps {
@@ -15,6 +16,7 @@ export default function TranscriptUnlock({
   translationBn,
   unlocked,
 }: TranscriptUnlockProps) {
+  const { t } = useLanguage();
   const [showRomaji, setShowRomaji] = useState(false);
   const [expanded, setExpanded] = useState(true);
 
@@ -34,7 +36,7 @@ export default function TranscriptUnlock({
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between p-4 text-sm text-ikori-body hover:text-ikori-dark transition-colors font-sans"
       >
-        <span className="font-medium">Transcript</span>
+        <span className="font-medium">{t('show_transcript')}</span>
         {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
       </button>
 
@@ -50,7 +52,7 @@ export default function TranscriptUnlock({
             onClick={() => setShowRomaji(!showRomaji)}
             className="text-xs text-ikori-500 hover:underline font-sans"
           >
-            {showRomaji ? "Hide romaji" : "Show romaji"}
+            {showRomaji ? `Hide ${t('romaji').toLowerCase()}` : t('romaji')}
           </button>
 
           {showRomaji && (
@@ -59,9 +61,10 @@ export default function TranscriptUnlock({
             </p>
           )}
 
-          {/* Bangla translation */}
+          {/* Translation */}
           {translationBn && (
             <div className="pt-2 border-t border-ikori-border">
+              <p className="text-xs text-ikori-muted mb-1 font-sans">{t('translation')}</p>
               <p className="text-sm text-ikori-muted font-sans">{translationBn}</p>
             </div>
           )}

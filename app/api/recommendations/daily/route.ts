@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import type { Mission, DailyRecommendation, SkillTag } from "@/types";
 
+export const dynamic = "force-dynamic";
+
 const VOCAB_SKILLS: SkillTag[] = ["kana_recognition", "kanji_reading", "word_meaning", "vocab_usage"];
 const GRAMMAR_SKILLS: SkillTag[] = ["particle", "verb_form", "adjective_form", "sentence_completion", "sentence_order", "short_reading", "notice_reading"];
 const LISTENING_SKILLS: SkillTag[] = ["listening_gist", "listening_detail", "listening_response", "listening_sequence"];
@@ -38,11 +40,10 @@ export async function GET() {
       .map((w: { skill_tag: string }) => w.skill_tag as SkillTag);
 
     const missions: Mission[] = [];
-    let missionId = 0;
 
     // Always recommend flashcards
     missions.push({
-      id: `mission-${missionId++}`,
+      id: "flashcard_session",
       type: "flashcards",
       title: "Review Flashcards",
       description: "Review due flashcards to strengthen vocabulary retention",
@@ -59,7 +60,7 @@ export async function GET() {
 
     if (weakVocab.length > 0) {
       missions.push({
-        id: `mission-${missionId++}`,
+        id: "vocab_drill",
         type: "vocab_drill",
         title: "Vocabulary Drill",
         description: `Focus on: ${weakVocab.join(", ").replace(/_/g, " ")}`,
@@ -72,7 +73,7 @@ export async function GET() {
 
     if (weakGrammar.length > 0) {
       missions.push({
-        id: `mission-${missionId++}`,
+        id: "grammar_drill",
         type: "grammar_drill",
         title: "Grammar Drill",
         description: `Focus on: ${weakGrammar.join(", ").replace(/_/g, " ")}`,
@@ -85,7 +86,7 @@ export async function GET() {
 
     if (weakListening.length > 0) {
       missions.push({
-        id: `mission-${missionId++}`,
+        id: "listening_quiz",
         type: "listening_quiz",
         title: "Listening Practice",
         description: `Focus on: ${weakListening.join(", ").replace(/_/g, " ")}`,
@@ -112,7 +113,7 @@ export async function GET() {
           : "listening";
 
       missions.push({
-        id: `mission-${missionId++}`,
+        id: "mock_exam",
         type: "mock_exam",
         title: `${weakestSection.replace("_", " ")} Section Mock`,
         description: "Take a section mock to assess your progress",
@@ -121,6 +122,40 @@ export async function GET() {
         estimated_minutes: 20,
         completed: false,
       });
+    }
+
+    // Upsert today's missions into daily_mission_progress
+    const today = new Date().toISOString().split("T")[0];
+    for (const mission of missions) {
+      await supabase.from("daily_mission_progress").upsert(
+        {
+          user_id: user.id,
+          mission_date: today,
+          mission_type: mission.type,
+          mission_label: mission.title,
+          target_count: 1,
+        },
+        { onConflict: "user_id,mission_date,mission_type" }
+      );
+    }
+
+    // Read back completion status
+    const { data: progressData } = await supabase
+      .from("daily_mission_progress")
+      .select("mission_type, completed, completed_at")
+      .eq("user_id", user.id)
+      .eq("mission_date", today);
+
+    const progressMap = new Map(
+      (progressData || []).map((p: { mission_type: string; completed: boolean }) => [
+        p.mission_type,
+        p.completed,
+      ])
+    );
+
+    // Merge completion status into missions
+    for (const mission of missions) {
+      mission.completed = progressMap.get(mission.type) || false;
     }
 
     const recommendation: DailyRecommendation = {

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { createClientComponentClient } from "@/lib/supabase";
+import { useLanguage } from "@/lib/language-context";
+import { getSkillLabel } from "@/lib/i18n";
 import ResultsBand from "@/components/exam/ResultsBand";
 import QuestionCard from "@/components/exam/QuestionCard";
 import type { ExamSession, ExamResponse, Question, SkillTag, ReadinessBand } from "@/types";
@@ -11,6 +13,7 @@ import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 export default function ExamResultsPage() {
   const params = useParams();
   const router = useRouter();
+  const { t, lang } = useLanguage();
   const sessionId = params.session_id as string;
 
   const [session, setSession] = useState<ExamSession | null>(null);
@@ -85,6 +88,15 @@ export default function ExamResultsPage() {
         );
       }
 
+      // Fire-and-forget mission completion
+      fetch('/api/missions/complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mission_type: sessionData.exam_type === 'full' ? 'mock_exam' : 'weak_skill_drill',
+        }),
+      }).catch(() => {});
+
       setLoading(false);
     }
 
@@ -94,7 +106,7 @@ export default function ExamResultsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-ikori-white">
-        <div className="animate-pulse text-ikori-muted">Loading results...</div>
+        <div className="animate-pulse text-ikori-muted">{t('loading')}</div>
       </div>
     );
   }
@@ -121,12 +133,12 @@ export default function ExamResultsPage() {
           className="flex items-center gap-1 text-ikori-muted hover:text-ikori-dark mb-4 transition-colors"
         >
           <ArrowLeft size={18} />
-          Back to Results
+          {t('back_results')}
         </button>
 
         <div className="mb-4">
           <p className="text-sm text-ikori-muted">
-            Wrong Answer {reviewIdx + 1} of {wrongResponses.length}
+            {t('wrong_answer', { n: reviewIdx + 1, total: wrongResponses.length })}
           </p>
           <div className="h-[3px] bg-ikori-100 rounded-full mt-2 overflow-hidden">
             <div
@@ -153,7 +165,7 @@ export default function ExamResultsPage() {
             className="flex-1 flex items-center justify-center gap-1 py-3 rounded-full border border-ikori-border text-ikori-body disabled:opacity-30 transition-colors"
           >
             <ChevronLeft size={18} />
-            Previous
+            {t('previous')}
           </button>
           <button
             onClick={() =>
@@ -162,7 +174,7 @@ export default function ExamResultsPage() {
             disabled={reviewIdx === wrongResponses.length - 1}
             className="flex-1 flex items-center justify-center gap-1 py-3 rounded-full bg-ikori-500 text-white font-semibold disabled:opacity-30 transition-colors"
           >
-            Next
+            {t('next')}
             <ChevronRight size={18} />
           </button>
         </div>
@@ -172,7 +184,7 @@ export default function ExamResultsPage() {
 
   return (
     <div className="px-4 py-6 bg-ikori-white min-h-screen">
-      <h1 className="text-2xl font-display font-bold text-ikori-dark mb-6">Exam Results</h1>
+      <h1 className="text-2xl font-display font-bold text-ikori-dark mb-6">{t('exam_results')}</h1>
 
       <ResultsBand
         readinessBand={(session.readiness_band || "high_risk") as ReadinessBand}
@@ -188,7 +200,7 @@ export default function ExamResultsPage() {
       {skillScores.length > 0 && (
         <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 mt-6">
           <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3">
-            Skills Breakdown
+            {t('skill_breakdown')}
           </h3>
           <div className="space-y-2">
             {skillScores.map((skill) => (
@@ -198,7 +210,7 @@ export default function ExamResultsPage() {
                     skill.percentage < 60 ? "text-red-500" : "text-ikori-body"
                   }`}
                 >
-                  {skill.skill_tag.replace(/_/g, " ")}
+                  {getSkillLabel(skill.skill_tag, lang)}
                 </span>
                 <span
                   className={`text-sm font-medium ${
@@ -227,7 +239,7 @@ export default function ExamResultsPage() {
             }}
             className="btn-secondary w-full"
           >
-            Review Wrong Answers ({wrongResponses.length})
+            {t('review_wrong', { count: wrongResponses.length })}
           </button>
         )}
 
@@ -235,14 +247,14 @@ export default function ExamResultsPage() {
           onClick={() => router.push("/exam")}
           className="btn-green w-full"
         >
-          Take Another Mock
+          {t('take_another')}
         </button>
 
         <button
           onClick={() => router.push("/dashboard")}
           className="btn-secondary w-full"
         >
-          Back to Dashboard
+          {t('back_dashboard')}
         </button>
       </div>
     </div>

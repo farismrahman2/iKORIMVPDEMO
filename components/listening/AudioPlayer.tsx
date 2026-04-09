@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useLanguage } from "@/lib/language-context";
 import { Play, Pause, RotateCcw } from "lucide-react";
 import { createClientComponentClient } from "@/lib/supabase";
 
@@ -19,6 +20,7 @@ export default function AudioPlayer({
   onError,
   questionId,
 }: AudioPlayerProps) {
+  const { t } = useLanguage();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -125,7 +127,7 @@ export default function AudioPlayer({
   if (error) {
     return (
       <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 text-center">
-        <p className="text-red-500 text-sm font-sans">Audio unavailable</p>
+        <p className="text-red-500 text-sm font-sans">{t('audio_not_available')}</p>
         <button
           onClick={() => {
             setError(false);
@@ -134,7 +136,7 @@ export default function AudioPlayer({
           className="text-ikori-500 text-sm mt-2 hover:underline font-sans"
         >
           <RotateCcw size={14} className="inline mr-1" />
-          Retry
+          {t('retry')}
         </button>
       </div>
     );

@@ -1,6 +1,8 @@
 "use client";
 
 import type { ReadinessBand, SectionScores } from "@/types";
+import { useLanguage } from "@/lib/language-context";
+import type { TranslationKey } from "@/lib/i18n";
 
 interface ResultsBandProps {
   readinessBand: ReadinessBand;
@@ -10,25 +12,25 @@ interface ResultsBandProps {
 
 const BAND_CONFIG: Record<
   ReadinessBand,
-  { label: string; color: string; barColor: string }
+  { labelKey: TranslationKey; color: string; barColor: string }
 > = {
   strong: {
-    label: "Strong Pass",
+    labelKey: "strong_pass",
     color: "text-ikori-500",
     barColor: "bg-ikori-500",
   },
   probable: {
-    label: "Probable Pass",
+    labelKey: "probable_pass",
     color: "text-blue-500",
     barColor: "bg-blue-500",
   },
   borderline: {
-    label: "Borderline",
+    labelKey: "borderline",
     color: "text-amber-500",
     barColor: "bg-amber-500",
   },
   high_risk: {
-    label: "High Risk",
+    labelKey: "high_risk",
     color: "text-red-500",
     barColor: "bg-red-500",
   },
@@ -57,6 +59,7 @@ export default function ResultsBand({
   weightedScore,
   sectionScores,
 }: ResultsBandProps) {
+  const { t } = useLanguage();
   const config = BAND_CONFIG[readinessBand];
   const score = Math.round(weightedScore);
 
@@ -65,27 +68,27 @@ export default function ResultsBand({
       {/* Main band display — gradient hero */}
       <div className="bg-ikori-gradient rounded-ikori p-5 text-center space-y-2">
         <p className="text-ikori-900 text-5xl font-display font-bold">{score}%</p>
-        <p className="text-ikori-800 text-xl font-semibold">{config.label}</p>
-        <p className="text-ikori-700 text-sm">Readiness Score</p>
+        <p className="text-ikori-800 text-xl font-semibold">{t(config.labelKey)}</p>
+        <p className="text-ikori-700 text-sm">{t('readiness_score')}</p>
       </div>
 
       {/* Section breakdown */}
       <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 space-y-4">
         <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide">
-          Section Scores
+          {t('section_scores')}
         </h3>
         <ScoreBar
-          label="Vocabulary"
+          label={t('vocabulary')}
           score={sectionScores.vocab}
           color={sectionScores.vocab >= 60 ? "bg-ikori-500" : "bg-red-500"}
         />
         <ScoreBar
-          label="Grammar & Reading"
+          label={t('grammar_reading')}
           score={sectionScores.grammar_reading}
           color={sectionScores.grammar_reading >= 60 ? "bg-ikori-500" : "bg-red-500"}
         />
         <ScoreBar
-          label="Listening"
+          label={t('listening')}
           score={sectionScores.listening}
           color={sectionScores.listening >= 60 ? "bg-ikori-500" : "bg-red-500"}
         />

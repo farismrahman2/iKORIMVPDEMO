@@ -1,21 +1,14 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClientComponentClient } from "@/lib/supabase";
+import { useLanguage } from "@/lib/language-context";
 import AudioPlayer from "@/components/listening/AudioPlayer";
 import TranscriptUnlock from "@/components/listening/TranscriptUnlock";
 import type { Question, SkillTag } from "@/types";
 import { CheckCircle, XCircle } from "lucide-react";
 
 type ListeningMode = "mcq" | "sequence" | "fill_blank" | "choose_reply" | "transcript";
-
-const MODES: { key: ListeningMode; label: string }[] = [
-  { key: "mcq", label: "Standard MCQ" },
-  { key: "sequence", label: "Sequence" },
-  { key: "fill_blank", label: "Fill Blank" },
-  { key: "choose_reply", label: "Choose Reply" },
-  { key: "transcript", label: "Transcript" },
-];
 
 const MODE_SKILL_MAP: Record<ListeningMode, SkillTag> = {
   mcq: "listening_gist",
@@ -26,6 +19,16 @@ const MODE_SKILL_MAP: Record<ListeningMode, SkillTag> = {
 };
 
 export default function ListeningPage() {
+  const { t, lang } = useLanguage();
+
+  const MODES: { key: ListeningMode; label: string }[] = [
+    { key: "mcq", label: t('standard_mcq') },
+    { key: "sequence", label: t('sequence') },
+    { key: "fill_blank", label: t('fill_blank_mode') },
+    { key: "choose_reply", label: t('choose_reply') },
+    { key: "transcript", label: t('transcript_mode') },
+  ];
+
   const [mode, setMode] = useState<ListeningMode>("mcq");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -126,23 +129,7 @@ export default function ListeningPage() {
   if (sessionDone) {
     const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
     return (
-      <div className="px-4 py-6 bg-ikori-white min-h-screen">
-        <h1 className="text-2xl font-bold font-display text-ikori-dark mb-6">Session Complete</h1>
-        <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-6 text-center mb-6">
-          <div className="bg-ikori-gradient-subtle rounded-ikori p-6">
-            <p className="text-4xl font-bold text-ikori-500">{pct}%</p>
-            <p className="text-ikori-muted mt-2 font-sans">
-              {correct} / {total} correct
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={loadQuestions}
-          className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans"
-        >
-          Practice Again
-        </button>
-      </div>
+      <ListeningSessionComplete pct={pct} correct={correct} total={total} onPracticeAgain={loadQuestions} t={t} />
     );
   }
 
@@ -151,7 +138,7 @@ export default function ListeningPage() {
   if (!question) {
     return (
       <div className="px-4 py-6 bg-ikori-white min-h-screen">
-        <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">Listening</h1>
+        <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">{t('listening')}</h1>
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
           {MODES.map((m) => (
             <button
@@ -168,7 +155,7 @@ export default function ListeningPage() {
           ))}
         </div>
         <div className="text-center py-12 text-ikori-muted font-sans">
-          No listening questions available for this mode yet.
+          {t('no_listening')}
         </div>
       </div>
     );
@@ -178,7 +165,7 @@ export default function ListeningPage() {
 
   return (
     <div className="px-4 py-6 bg-ikori-white min-h-screen">
-      <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">Listening</h1>
+      <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">{t('listening')}</h1>
 
       {/* Mode selector */}
       <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
@@ -200,10 +187,10 @@ export default function ListeningPage() {
       {/* Progress */}
       <div className="flex justify-between text-sm text-ikori-muted mb-4 font-sans">
         <span>
-          Clip {currentIdx + 1} / {questions.length}
+          {t('clip_of', { n: currentIdx + 1, total: questions.length })}
         </span>
         <span>
-          {correct} / {total} correct
+          {correct} / {total} {t('correct')}
         </span>
       </div>
 
@@ -217,7 +204,7 @@ export default function ListeningPage() {
           />
         ) : question.audio_script ? (
           <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 text-center">
-            <p className="text-ikori-muted text-sm mb-2 font-sans">Audio not available</p>
+            <p className="text-ikori-muted text-sm mb-2 font-sans">{t('audio_not_available')}</p>
             <p className="text-ikori-dark text-sm italic font-sans">{question.audio_script}</p>
           </div>
         ) : null}
@@ -303,8 +290,8 @@ export default function ListeningPage() {
       {showResult && (
         <div className="space-y-4 mb-6">
           <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
-            <p className="text-sm text-ikori-body font-sans">{question.explanation_en}</p>
-            <p className="text-sm text-ikori-muted mt-1 font-sans">{question.explanation_bn}</p>
+            <p className="text-sm text-ikori-body font-sans">{lang === 'bn' ? question.explanation_bn : question.explanation_en}</p>
+            <p className="text-sm text-ikori-muted mt-1 font-sans">{lang === 'bn' ? question.explanation_en : question.explanation_bn}</p>
           </div>
 
           {/* Transcript unlock for transcript mode */}
@@ -321,10 +308,56 @@ export default function ListeningPage() {
             onClick={nextQuestion}
             className="btn-primary w-full py-3 rounded-ikori-sm font-semibold font-sans"
           >
-            {currentIdx === questions.length - 1 ? "Finish" : "Next Clip"}
+            {currentIdx === questions.length - 1 ? t('finish') : t('next_clip')}
           </button>
         </div>
       )}
+    </div>
+  );
+}
+
+function ListeningSessionComplete({
+  pct,
+  correct,
+  total,
+  onPracticeAgain,
+  t,
+}: {
+  pct: number;
+  correct: number;
+  total: number;
+  onPracticeAgain: () => void;
+  t: (key: import("@/lib/i18n").TranslationKey, params?: Record<string, string | number>) => string;
+}) {
+  const missionFired = useRef(false);
+
+  useEffect(() => {
+    if (missionFired.current) return;
+    missionFired.current = true;
+    fetch('/api/missions/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mission_type: 'listening_quiz' }),
+    });
+  }, []);
+
+  return (
+    <div className="px-4 py-6 bg-ikori-white min-h-screen">
+      <h1 className="text-2xl font-bold font-display text-ikori-dark mb-6">{t('session_complete')}</h1>
+      <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-6 text-center mb-6">
+        <div className="bg-ikori-gradient-subtle rounded-ikori p-6">
+          <p className="text-4xl font-bold text-ikori-500">{pct}%</p>
+          <p className="text-ikori-muted mt-2 font-sans">
+            {correct} / {total} {t('correct')}
+          </p>
+        </div>
+      </div>
+      <button
+        onClick={onPracticeAgain}
+        className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans"
+      >
+        {t('practice_again')}
+      </button>
     </div>
   );
 }

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@/lib/supabase";
+import { useLanguage } from "@/lib/language-context";
+import { getSkillLabel } from "@/lib/i18n";
 import type { ExamSession, ReadinessBand, SkillTag } from "@/types";
 
 const BAND_COLORS: Record<ReadinessBand, string> = {
@@ -12,6 +14,8 @@ const BAND_COLORS: Record<ReadinessBand, string> = {
 };
 
 export default function ProgressPage() {
+  const { t, lang } = useLanguage();
+
   const [sessions, setSessions] = useState<ExamSession[]>([]);
   const [skills, setSkills] = useState<{ skill_tag: SkillTag; score: number }[]>([]);
   const [stats, setStats] = useState({
@@ -109,15 +113,15 @@ export default function ProgressPage() {
 
   return (
     <div className="px-4 py-6 space-y-6 bg-ikori-white min-h-screen">
-      <h1 className="text-2xl font-bold font-display text-ikori-dark">Progress</h1>
+      <h1 className="text-2xl font-bold font-display text-ikori-dark">{t('progress')}</h1>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: "Exams Taken", value: stats.totalExams },
-          { label: "Questions Answered", value: stats.totalQuestions },
-          { label: "Current Streak", value: stats.streakRecord },
-          { label: "Cards Reviewed", value: stats.flashcardsReviewed },
+          { label: t('total_exams'), value: stats.totalExams },
+          { label: t('questions_answered'), value: stats.totalQuestions },
+          { label: t('best_streak'), value: stats.streakRecord },
+          { label: t('cards_reviewed'), value: stats.flashcardsReviewed },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 text-center">
             <p className="text-2xl font-bold text-ikori-500 font-display">{stat.value}</p>
@@ -130,7 +134,7 @@ export default function ProgressPage() {
       {sessions.length > 1 && (
         <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
           <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3 font-sans">
-            Score Trend
+            {t('score_trend')}
           </h3>
           <ScoreTrendChart sessions={sessions} />
         </div>
@@ -139,11 +143,11 @@ export default function ProgressPage() {
       {/* Exam History */}
       <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
         <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3 font-sans">
-          Exam History
+          {t('exam_history')}
         </h3>
         {sessions.length === 0 ? (
           <p className="text-ikori-muted text-sm text-center py-4 font-sans">
-            No exams completed yet.
+            {t('no_exams')}
           </p>
         ) : (
           <div className="space-y-2">
@@ -191,8 +195,8 @@ export default function ProgressPage() {
             {skills.map((skill) => (
               <div key={skill.skill_tag}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-ikori-body capitalize font-sans">
-                    {skill.skill_tag.replace(/_/g, " ")}
+                  <span className="text-ikori-body font-sans">
+                    {getSkillLabel(skill.skill_tag, lang)}
                   </span>
                   <span
                     className={`font-medium font-sans ${

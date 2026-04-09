@@ -4,12 +4,14 @@ import { useState } from "react";
 import { createClientComponentClient } from "@/lib/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { t, Language } from "@/lib/i18n";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lang] = useState<Language>("en");
   const router = useRouter();
   const supabase = createClientComponentClient();
 
@@ -46,7 +48,7 @@ export default function LoginPage() {
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-ikori-body mb-1">
-              Email
+              {t('email', lang)}
             </label>
             <input
               id="email"
@@ -61,7 +63,7 @@ export default function LoginPage() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-ikori-body mb-1">
-              Password
+              {t('password', lang)}
             </label>
             <input
               id="password"
@@ -85,14 +87,14 @@ export default function LoginPage() {
             disabled={loading}
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? t('signing_in', lang) : t('sign_in', lang)}
           </button>
         </form>
 
         <p className="text-center text-ikori-muted text-sm mt-6">
-          Don&apos;t have an account?{" "}
+          {t('dont_have', lang)}{" "}
           <Link href="/signup" className="text-ikori-500 font-medium hover:underline">
-            Sign up
+            {t('sign_up', lang)}
           </Link>
         </p>
       </div>

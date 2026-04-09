@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClientComponentClient } from "@/lib/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { t, Language } from "@/lib/i18n";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -12,6 +13,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lang] = useState<Language>("en");
   const router = useRouter();
   const supabase = createClientComponentClient();
 
@@ -61,13 +63,13 @@ export default function SignupPage() {
           <h1 className="text-3xl font-display font-bold text-ikori-dark">
             iKORI <span className="text-ikori-500">N5</span>
           </h1>
-          <p className="text-ikori-muted mt-2 text-sm">Create your account</p>
+          <p className="text-ikori-muted mt-2 text-sm">{t('create_account', lang)}</p>
         </div>
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-ikori-body mb-1">
-              Name
+              {t('name', lang)}
             </label>
             <input
               id="name"
@@ -82,7 +84,7 @@ export default function SignupPage() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-ikori-body mb-1">
-              Email
+              {t('email', lang)}
             </label>
             <input
               id="email"
@@ -97,7 +99,7 @@ export default function SignupPage() {
 
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-ikori-body mb-1">
-              Phone <span className="text-ikori-muted">(optional)</span>
+              {t('phone', lang)} <span className="text-ikori-muted">({t('optional', lang)})</span>
             </label>
             <input
               id="phone"
@@ -111,7 +113,7 @@ export default function SignupPage() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-ikori-body mb-1">
-              Password
+              {t('password', lang)}
             </label>
             <input
               id="password"
@@ -136,14 +138,14 @@ export default function SignupPage() {
             disabled={loading}
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Creating account..." : "Create Account"}
+            {loading ? t('creating_account', lang) : t('sign_up', lang)}
           </button>
         </form>
 
         <p className="text-center text-ikori-muted text-sm mt-6">
-          Already have an account?{" "}
+          {t('already_have', lang)}{" "}
           <Link href="/login" className="text-ikori-500 font-medium hover:underline">
-            Sign in
+            {t('sign_in', lang)}
           </Link>
         </p>
       </div>

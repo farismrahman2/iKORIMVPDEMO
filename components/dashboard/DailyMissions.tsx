@@ -10,6 +10,8 @@ import {
   CheckCircle,
   PenLine,
 } from "lucide-react";
+import { useLanguage } from "@/lib/language-context";
+import type { TranslationKey } from "@/lib/i18n";
 
 interface DailyMissionsProps {
   missions: Mission[];
@@ -31,18 +33,27 @@ const MISSION_ROUTES: Record<string, string> = {
   mock_exam: "/exam",
 };
 
+const MISSION_TITLE_KEYS: Record<string, TranslationKey> = {
+  flashcards: "flashcard_session",
+  vocab_drill: "vocab_drill",
+  listening_quiz: "listening_quiz",
+  grammar_drill: "grammar_drill",
+  mock_exam: "mock_exam",
+};
+
 export default function DailyMissions({ missions }: DailyMissionsProps) {
   const router = useRouter();
+  const { t } = useLanguage();
   const completed = missions.filter((m) => m.completed).length;
 
   return (
     <div className="card">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide">
-          Today&apos;s Missions
+          {t('todays_missions')}
         </h3>
         <span className="text-xs text-ikori-500 font-medium">
-          {completed} of {missions.length} complete
+          {t('of_complete', { done: completed, total: missions.length })}
         </span>
       </div>
 
@@ -79,10 +90,10 @@ export default function DailyMissions({ missions }: DailyMissionsProps) {
                     mission.completed ? "text-ikori-muted line-through" : "text-ikori-dark"
                   }`}
                 >
-                  {mission.title}
+                  {MISSION_TITLE_KEYS[mission.type] ? t(MISSION_TITLE_KEYS[mission.type]) : mission.title}
                 </p>
                 <p className="text-xs text-ikori-muted">
-                  {mission.question_count} items | ~{mission.estimated_minutes} min
+                  {mission.question_count} {t('items')} | ~{mission.estimated_minutes} {t('min')}
                 </p>
               </div>
             </button>
