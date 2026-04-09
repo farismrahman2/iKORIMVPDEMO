@@ -241,7 +241,7 @@ export default function ListeningPage() {
                 disabled={showResult}
                 className={`w-full text-left px-4 py-3 rounded-lg border transition-colors flex items-center gap-3 ${
                   showResult
-                    ? idx === sequenceOrder[idx]
+                    ? sequenceOrder.indexOf(idx) === idx
                       ? "border-green-500 bg-green-500/10 text-green-400"
                       : "border-navy-lighter bg-navy-light text-gray-500"
                     : isSelected

@@ -110,6 +110,8 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                const audio = new Audio(word.audio_url!);
+                audio.play().catch(() => {});
               }}
               className="mt-4 text-accent-orange hover:text-orange-400"
             >

@@ -175,7 +175,7 @@ export default function ExamResultsPage() {
       <h1 className="text-2xl font-bold mb-6">Exam Results</h1>
 
       <ResultsBand
-        readinessBand={(session.readiness_band as ReadinessBand) || "high_risk"}
+        readinessBand={(session.readiness_band || "high_risk") as ReadinessBand}
         weightedScore={session.weighted_score || 0}
         sectionScores={{
           vocab: session.vocab_score || 0,

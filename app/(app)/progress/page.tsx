@@ -237,10 +237,13 @@ function ScoreTrendChart({ sessions }: { sessions: ExamSession[] }) {
   const minScore = Math.min(...scores, 0);
   const range = maxScore - minScore || 1;
 
-  const points = scores.map((score, i) => ({
-    x: padding + (i / (scores.length - 1)) * (width - 2 * padding),
-    y: padding + ((maxScore - score) / range) * (height - 2 * padding),
-  }));
+  const points = scores.map((score, i) => {
+    const xRatio = scores.length <= 1 ? 0.5 : i / (scores.length - 1);
+    return {
+      x: padding + xRatio * (width - 2 * padding),
+      y: padding + ((maxScore - score) / range) * (height - 2 * padding),
+    };
+  });
 
   const pathD = points
     .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)

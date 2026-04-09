@@ -39,16 +39,17 @@ const BAND_CONFIG: Record<
 };
 
 function ScoreBar({ label, score, color }: { label: string; score: number; color: string }) {
+  const safeScore = Number.isFinite(score) ? score : 0;
   return (
     <div>
       <div className="flex justify-between text-sm mb-1">
         <span className="text-gray-400">{label}</span>
-        <span className="text-white font-medium">{Math.round(score)}%</span>
+        <span className="text-white font-medium">{Math.round(safeScore)}%</span>
       </div>
       <div className="h-2 bg-navy-lighter rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-500 ${color}`}
-          style={{ width: `${Math.min(score, 100)}%` }}
+          style={{ width: `${Math.min(safeScore, 100)}%` }}
         />
       </div>
     </div>

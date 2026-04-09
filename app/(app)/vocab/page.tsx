@@ -264,7 +264,13 @@ export default function VocabPage() {
               </p>
             )}
             {word.audio_url && (
-              <button className="mt-3 text-accent-orange">
+              <button
+                onClick={() => {
+                  const audio = new Audio(word.audio_url!);
+                  audio.play().catch(() => {});
+                }}
+                className="mt-3 text-accent-orange hover:text-orange-400"
+              >
                 <Volume2 size={20} />
               </button>
             )}
