@@ -85,27 +85,18 @@ export default function AudioPage() {
     setBulkGenerating(true);
     setBulkProgress({ done: 0, total: missingQuestions.length });
 
-    // Process in batches of 10
-    for (let i = 0; i < missingQuestions.length; i += 10) {
-      const batch = missingQuestions.slice(i, i + 10);
-      const ids = batch.map((q) => q.id);
-
+    // Process ONE at a time (Vercel free tier 10s timeout)
+    for (let i = 0; i < missingQuestions.length; i++) {
       try {
         const res = await fetch("/api/admin/audio/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question_ids: ids, speaker: "female" }),
+          body: JSON.stringify({ question_ids: [missingQuestions[i].id], speaker: "female" }),
         });
-        const data = await res.json();
-        setBulkProgress((prev) => ({
-          ...prev,
-          done: prev.done + (data.processed || 0),
-        }));
+        await res.json();
+        setBulkProgress((prev) => ({ ...prev, done: prev.done + 1 }));
       } catch {
-        setBulkProgress((prev) => ({
-          ...prev,
-          done: prev.done + batch.length,
-        }));
+        setBulkProgress((prev) => ({ ...prev, done: prev.done + 1 }));
       }
     }
 

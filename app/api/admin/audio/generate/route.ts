@@ -5,7 +5,8 @@ import { isAdmin } from "@/lib/admin";
 import { generateSpeech } from "@/lib/elevenlabs";
 import { uploadAudio } from "@/lib/audio-storage";
 
-const MAX_PER_REQUEST = 10;
+// Vercel free tier has 10s timeout — process ONE question per request.
+// The client chains requests for bulk generation.
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,86 +32,58 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const ids = question_ids.slice(0, MAX_PER_REQUEST);
+    // Only process the FIRST question to stay within Vercel 10s timeout
+    const questionId = question_ids[0];
     const adminDb = createServiceRoleClient();
 
-    // Fetch questions
-    const { data: questions, error: fetchError } = await adminDb
+    const { data: question, error: fetchError } = await adminDb
       .from("questions")
       .select("id, question_text, audio_script, options")
-      .in("id", ids);
+      .eq("id", questionId)
+      .single();
 
-    if (fetchError || !questions) {
+    if (fetchError || !question) {
       return NextResponse.json(
-        { error: "Failed to fetch questions" },
-        { status: 500 }
+        { error: "Question not found" },
+        { status: 404 }
       );
     }
 
-    const results: { question_id: string; status: string; audio_url?: string; error?: string }[] = [];
-    let success = 0;
-    let failed = 0;
-
-    for (const q of questions) {
-      const text = q.audio_script || q.question_text;
-      if (!text) {
-        results.push({ question_id: q.id, status: "skipped", error: "No audio script or question text" });
-        failed++;
-        continue;
-      }
-
-      // Log start
-      await adminDb.from("audio_generation_log").insert({
-        question_id: q.id,
-        audio_script: text,
-        speaker,
-        status: "generating",
-        generated_by: user.id,
+    const text = question.audio_script || question.question_text;
+    if (!text) {
+      return NextResponse.json({
+        processed: 1,
+        success: 0,
+        failed: 1,
+        results: [{ question_id: questionId, status: "skipped", error: "No audio script" }],
       });
-
-      try {
-        const audioBuffer = await generateSpeech(text, speaker);
-        const audioUrl = await uploadAudio(audioBuffer, q.id, speaker);
-
-        // Update question with audio URL
-        await adminDb
-          .from("questions")
-          .update({ audio_url: audioUrl })
-          .eq("id", q.id);
-
-        // Update log
-        await adminDb
-          .from("audio_generation_log")
-          .update({ status: "uploaded", audio_url: audioUrl })
-          .eq("question_id", q.id)
-          .eq("status", "generating");
-
-        results.push({ question_id: q.id, status: "uploaded", audio_url: audioUrl });
-        success++;
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : "Unknown error";
-        await adminDb
-          .from("audio_generation_log")
-          .update({ status: "error", error_message: errorMsg })
-          .eq("question_id", q.id)
-          .eq("status", "generating");
-
-        results.push({ question_id: q.id, status: "error", error: errorMsg });
-        failed++;
-      }
-
-      // Rate limiting: 1 second delay between ElevenLabs calls
-      if (questions.indexOf(q) < questions.length - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
     }
 
-    return NextResponse.json({
-      processed: results.length,
-      success,
-      failed,
-      results,
-    });
+    try {
+      const audioBuffer = await generateSpeech(text, speaker);
+      const audioUrl = await uploadAudio(audioBuffer, question.id, speaker);
+
+      // Update question with audio URL
+      await adminDb
+        .from("questions")
+        .update({ audio_url: audioUrl })
+        .eq("id", question.id);
+
+      return NextResponse.json({
+        processed: 1,
+        success: 1,
+        failed: 0,
+        results: [{ question_id: question.id, status: "uploaded", audio_url: audioUrl }],
+      });
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      return NextResponse.json({
+        processed: 1,
+        success: 0,
+        failed: 1,
+        results: [{ question_id: question.id, status: "error", error: errorMsg }],
+      });
+    }
   } catch (error) {
     console.error("Audio generation error:", error);
     return NextResponse.json(
