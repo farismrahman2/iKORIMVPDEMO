@@ -15,10 +15,10 @@ const BAND_CONFIG: Record<
   ReadinessBand,
   { label: string; color: string; bg: string }
 > = {
-  strong: { label: "Strong Pass", color: "text-band-strong", bg: "bg-band-strong/20" },
-  probable: { label: "Probable Pass", color: "text-band-probable", bg: "bg-band-probable/20" },
-  borderline: { label: "Borderline", color: "text-band-borderline", bg: "bg-band-borderline/20" },
-  high_risk: { label: "High Risk", color: "text-band-high_risk", bg: "bg-band-high_risk/20" },
+  strong: { label: "Strong Pass", color: "text-ikori-700", bg: "bg-ikori-50" },
+  probable: { label: "Probable Pass", color: "text-blue-700", bg: "bg-blue-50" },
+  borderline: { label: "Borderline", color: "text-amber-700", bg: "bg-amber-50" },
+  high_risk: { label: "High Risk", color: "text-red-700", bg: "bg-red-50" },
 };
 
 export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowProps) {
@@ -110,41 +110,41 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
 
   if (step === "welcome") {
     return (
-      <div className="fixed inset-0 bg-navy z-50 flex items-center justify-center px-4">
+      <div className="fixed inset-0 bg-ikori-white z-50 flex items-center justify-center px-4 sm:px-6">
         <div className="text-center max-w-md">
-          <h1 className="text-3xl font-bold mb-2">
-            Welcome to iKORI <span className="text-accent-orange">N5</span>
+          <h1 className="text-3xl font-display font-bold text-ikori-dark mb-2">
+            Welcome to iKORI <span className="text-ikori-500">N5</span>
           </h1>
-          <p className="text-gray-400 mb-8">
+          <p className="text-ikori-muted mb-8">
             Let&apos;s find your starting level with a quick diagnostic test.
           </p>
           <div className="space-y-3">
-            <div className="bg-navy-light rounded-lg p-4 text-left">
-              <p className="text-sm text-gray-300">
-                <span className="text-accent-gold font-semibold">20 questions</span> covering vocabulary, grammar, and listening
+            <div className="card text-left">
+              <p className="text-sm text-ikori-body">
+                <span className="text-ikori-500 font-semibold">20 questions</span> covering vocabulary, grammar, and listening
               </p>
             </div>
-            <div className="bg-navy-light rounded-lg p-4 text-left">
-              <p className="text-sm text-gray-300">
-                Takes about <span className="text-accent-gold font-semibold">10 minutes</span>
+            <div className="card text-left">
+              <p className="text-sm text-ikori-body">
+                Takes about <span className="text-ikori-500 font-semibold">10 minutes</span>
               </p>
             </div>
-            <div className="bg-navy-light rounded-lg p-4 text-left">
-              <p className="text-sm text-gray-300">
-                We&apos;ll create a <span className="text-accent-gold font-semibold">personalized study plan</span> based on your results
+            <div className="card text-left">
+              <p className="text-sm text-ikori-body">
+                We&apos;ll create a <span className="text-ikori-500 font-semibold">personalized study plan</span> based on your results
               </p>
             </div>
           </div>
           <button
             onClick={startDiagnostic}
             disabled={loading}
-            className="w-full mt-8 py-3 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
+            className="btn-green w-full mt-8 disabled:opacity-50"
           >
             {loading ? "Preparing..." : "Start Diagnostic"}
           </button>
           <button
             onClick={finishOnboarding}
-            className="w-full mt-3 py-3 rounded-lg border border-navy-lighter text-gray-400 hover:text-white transition-colors"
+            className="btn-secondary w-full mt-3"
           >
             Skip for now
           </button>
@@ -161,17 +161,17 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
     const isLast = currentIdx === questions.length - 1;
 
     return (
-      <div className="fixed inset-0 bg-navy z-50 overflow-y-auto">
-        <div className="max-w-lg mx-auto px-4 py-6">
+      <div className="fixed inset-0 bg-ikori-white z-50 overflow-y-auto">
+        <div className="max-w-lg mx-auto px-4 sm:px-6 py-6">
           {/* Progress */}
           <div className="mb-6">
-            <div className="flex justify-between text-sm text-gray-400 mb-2">
+            <div className="flex justify-between text-sm text-ikori-muted mb-2">
               <span>Question {currentIdx + 1} of {questions.length}</span>
               <span className="capitalize">{question.section.replace("_", " ")}</span>
             </div>
-            <div className="h-2 bg-navy-light rounded-full overflow-hidden">
+            <div className="h-2 bg-ikori-surface rounded-full overflow-hidden">
               <div
-                className="h-full bg-accent-orange rounded-full transition-all"
+                className="h-full bg-ikori-500 rounded-full transition-all"
                 style={{ width: `${((currentIdx + 1) / questions.length) * 100}%` }}
               />
             </div>
@@ -179,7 +179,7 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
 
           {/* Question */}
           <div className="mb-6">
-            <p className="text-lg text-white leading-relaxed">{question.question_text}</p>
+            <p className="text-lg text-ikori-dark leading-relaxed font-medium">{question.question_text}</p>
           </div>
 
           {/* Options */}
@@ -188,13 +188,13 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
               <button
                 key={idx}
                 onClick={() => selectAnswer(question.id, idx)}
-                className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+                className={`w-full text-left px-4 py-3 rounded-ikori-sm border transition-colors ${
                   answers[question.id] === idx
-                    ? "border-accent-orange bg-accent-orange/10 text-white"
-                    : "border-navy-lighter bg-navy-light text-gray-300 hover:border-gray-500"
+                    ? "border-ikori-500 bg-ikori-50 text-ikori-dark"
+                    : "border-ikori-border bg-white text-ikori-body hover:border-ikori-300"
                 }`}
               >
-                <span className="font-medium mr-3 text-gray-500">
+                <span className="font-medium mr-3 text-ikori-muted">
                   {String.fromCharCode(65 + idx)}
                 </span>
                 {option}
@@ -207,7 +207,7 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
             {currentIdx > 0 && (
               <button
                 onClick={() => setCurrentIdx((i) => i - 1)}
-                className="flex-1 py-3 rounded-lg border border-navy-lighter text-gray-300 hover:text-white transition-colors"
+                className="btn-secondary flex-1"
               >
                 Previous
               </button>
@@ -216,14 +216,14 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
               <button
                 onClick={submitDiagnostic}
                 disabled={loading}
-                className="flex-1 py-3 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
+                className="btn-green flex-1 disabled:opacity-50"
               >
                 {loading ? "Scoring..." : "Submit"}
               </button>
             ) : (
               <button
                 onClick={() => setCurrentIdx((i) => i + 1)}
-                className="flex-1 py-3 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors"
+                className="btn-green flex-1"
               >
                 Next
               </button>
@@ -238,27 +238,29 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
     const bandConfig = BAND_CONFIG[results.readiness_band];
 
     return (
-      <div className="fixed inset-0 bg-navy z-50 flex items-center justify-center px-4">
+      <div className="fixed inset-0 bg-ikori-white z-50 flex items-center justify-center px-4 sm:px-6">
         <div className="text-center max-w-md w-full">
-          <h2 className="text-2xl font-bold mb-6">Your Starting Level</h2>
+          <h2 className="text-2xl font-display font-bold text-ikori-dark mb-6">Your Starting Level</h2>
 
-          <div className={`${bandConfig.bg} rounded-2xl p-8 mb-6`}>
-            <p className={`text-4xl font-bold ${bandConfig.color}`}>
+          <div className="bg-ikori-gradient rounded-ikori p-8 mb-6 space-y-3">
+            <p className="text-ikori-900 text-4xl font-display font-bold">
               {Math.round(results.weighted_score)}%
             </p>
-            <p className={`text-lg font-semibold mt-2 ${bandConfig.color}`}>
-              {bandConfig.label}
-            </p>
+            <div className="inline-block bg-white/60 backdrop-blur-sm rounded-ikori-full px-4 py-2">
+              <p className="text-ikori-800 text-sm font-semibold">
+                {bandConfig.label}
+              </p>
+            </div>
           </div>
 
           {results.weak_skills.length > 0 && (
-            <div className="bg-navy-light rounded-lg p-4 mb-6 text-left">
-              <p className="text-sm text-gray-400 mb-2">Areas to focus on:</p>
+            <div className="card mb-6 text-left">
+              <p className="text-sm text-ikori-muted mb-2">Areas to focus on:</p>
               <div className="flex flex-wrap gap-2">
                 {results.weak_skills.slice(0, 5).map((skill) => (
                   <span
                     key={skill}
-                    className="px-3 py-1 bg-band-high_risk/20 text-band-high_risk rounded-full text-xs"
+                    className="px-3 py-1 bg-red-50 text-red-700 border border-red-200 rounded-ikori-full text-xs font-medium"
                   >
                     {skill.replace(/_/g, " ")}
                   </span>
@@ -269,7 +271,7 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
 
           <button
             onClick={() => setStep("plan")}
-            className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors"
+            className="btn-green w-full"
           >
             See Your Study Plan
           </button>
@@ -280,15 +282,15 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
 
   if (step === "plan") {
     return (
-      <div className="fixed inset-0 bg-navy z-50 flex items-center justify-center px-4">
+      <div className="fixed inset-0 bg-ikori-white z-50 flex items-center justify-center px-4 sm:px-6">
         <div className="text-center max-w-md w-full">
-          <h2 className="text-2xl font-bold mb-6">Your 3-Day Kickstart Plan</h2>
+          <h2 className="text-2xl font-display font-bold text-ikori-dark mb-6">Your 3-Day Kickstart Plan</h2>
 
           <div className="space-y-4 mb-8 text-left">
             {["Day 1", "Day 2", "Day 3"].map((day, i) => (
-              <div key={day} className="bg-navy-light rounded-lg p-4">
-                <p className="font-semibold text-accent-gold mb-2">{day}</p>
-                <ul className="text-sm text-gray-300 space-y-1">
+              <div key={day} className="card">
+                <p className="font-display font-semibold text-ikori-500 mb-2">{day}</p>
+                <ul className="text-sm text-ikori-body space-y-1">
                   {i === 0 && (
                     <>
                       <li>Review 15 flashcards</li>
@@ -317,7 +319,7 @@ export default function OnboardingFlow({ userId, onComplete }: OnboardingFlowPro
 
           <button
             onClick={finishOnboarding}
-            className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors"
+            className="btn-green w-full"
           >
             Start Learning
           </button>

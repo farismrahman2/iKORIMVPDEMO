@@ -1,10 +1,11 @@
 {
   "name": "iKORI N5 Pass Engine",
   "short_name": "iKORI N5",
-  "description": "JLPT N5 Pass Readiness Trainer",
+  "description": "JLPT N5 Pass Readiness Trainer — by iKori",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#0A1628",
-  "theme_color": "#0A1628",
+  "background_color": "#FFFFFF",
+  "theme_color": "#10B981",
+  "orientation": "portrait",
   "icons": []
 }

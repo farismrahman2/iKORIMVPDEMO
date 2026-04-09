@@ -8,16 +8,13 @@ export default function AppError({
   reset: () => void;
 }) {
   return (
-    <div className="flex items-center justify-center min-h-screen px-4">
+    <div className="flex items-center justify-center min-h-screen px-4 bg-ikori-white">
       <div className="text-center max-w-md">
-        <h2 className="text-xl font-bold text-white mb-2">Something went wrong</h2>
-        <p className="text-gray-400 text-sm mb-6">
+        <h2 className="text-xl font-display font-bold text-ikori-dark mb-2">Something went wrong</h2>
+        <p className="text-ikori-muted text-sm mb-6">
           {error.message || "An unexpected error occurred. Please try again."}
         </p>
-        <button
-          onClick={reset}
-          className="px-6 py-2 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors"
-        >
+        <button onClick={reset} className="btn-primary">
           Try Again
         </button>
       </div>

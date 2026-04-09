@@ -124,14 +124,14 @@ export default function AudioPlayer({
 
   if (error) {
     return (
-      <div className="bg-navy-light rounded-lg p-4 text-center">
-        <p className="text-red-400 text-sm">Audio unavailable</p>
+      <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 text-center">
+        <p className="text-red-500 text-sm font-sans">Audio unavailable</p>
         <button
           onClick={() => {
             setError(false);
             setPlayCount(0);
           }}
-          className="text-accent-orange text-sm mt-2 hover:underline"
+          className="text-ikori-500 text-sm mt-2 hover:underline font-sans"
         >
           <RotateCcw size={14} className="inline mr-1" />
           Retry
@@ -141,7 +141,7 @@ export default function AudioPlayer({
   }
 
   return (
-    <div className="bg-navy-light rounded-lg p-4">
+    <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
       <audio ref={audioRef} src={src} preload="metadata" />
 
       <div className="flex items-center gap-3">
@@ -150,8 +150,8 @@ export default function AudioPlayer({
           disabled={!canPlay || loading}
           className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
             canPlay
-              ? "bg-accent-orange hover:bg-orange-600 text-white"
-              : "bg-gray-600 text-gray-400 cursor-not-allowed"
+              ? "bg-ikori-500 hover:bg-ikori-400 text-white"
+              : "bg-ikori-100 text-ikori-muted cursor-not-allowed"
           }`}
         >
           {loading ? (
@@ -165,13 +165,13 @@ export default function AudioPlayer({
 
         {/* Progress bar */}
         <div
-          className={`flex-1 h-2 bg-navy-lighter rounded-full overflow-hidden ${
+          className={`flex-1 h-2 bg-ikori-50 rounded-full overflow-hidden ${
             examMode ? "" : "cursor-pointer"
           }`}
           onClick={handleSeek}
         >
           <div
-            className="h-full bg-accent-orange rounded-full transition-all"
+            className="h-full bg-ikori-500 rounded-full transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -179,7 +179,7 @@ export default function AudioPlayer({
         {/* Speed control */}
         <button
           onClick={toggleSpeed}
-          className="text-xs text-gray-400 hover:text-white px-2 py-1 rounded border border-navy-lighter"
+          className="text-xs text-ikori-muted hover:text-ikori-dark px-2 py-1 rounded-ikori-sm border border-ikori-border font-sans"
         >
           {speed}x
         </button>
@@ -187,14 +187,14 @@ export default function AudioPlayer({
 
       {/* Play count indicator */}
       {examMode && (
-        <p className="text-xs text-gray-500 mt-2 text-center">
+        <p className="text-xs text-ikori-muted mt-2 text-center font-sans">
           {playCount} / {maxReplays} plays used
         </p>
       )}
 
       {/* Duration */}
       {duration > 0 && (
-        <p className="text-xs text-gray-500 mt-1 text-center">
+        <p className="text-xs text-ikori-muted mt-1 text-center font-sans">
           {Math.floor(duration / 60)}:{String(Math.floor(duration % 60)).padStart(2, "0")}
         </p>
       )}

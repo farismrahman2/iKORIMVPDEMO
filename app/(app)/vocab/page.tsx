@@ -8,9 +8,9 @@ import { Volume2, CheckCircle, XCircle } from "lucide-react";
 type VocabMode = "recognition" | "recall" | "reading" | "usage";
 
 const MODES: { key: VocabMode; label: string; desc: string }[] = [
-  { key: "recognition", label: "Recognition", desc: "JP \u2192 BN" },
-  { key: "recall", label: "Recall", desc: "BN \u2192 JP" },
-  { key: "reading", label: "Reading", desc: "Kanji \u2192 Kana" },
+  { key: "recognition", label: "Recognition", desc: "JP → BN" },
+  { key: "recall", label: "Recall", desc: "BN → JP" },
+  { key: "reading", label: "Reading", desc: "Kanji → Kana" },
   { key: "usage", label: "Usage", desc: "Context" },
 ];
 
@@ -161,8 +161,8 @@ export default function VocabPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-pulse text-gray-400">Loading vocabulary...</div>
+      <div className="flex items-center justify-center min-h-screen bg-ikori-white">
+        <div className="animate-pulse text-ikori-muted font-sans">Loading vocabulary...</div>
       </div>
     );
   }
@@ -170,17 +170,19 @@ export default function VocabPage() {
   if (sessionDone) {
     const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
     return (
-      <div className="px-4 py-6">
-        <h1 className="text-2xl font-bold mb-6">Session Complete</h1>
-        <div className="bg-navy-light rounded-xl p-6 text-center mb-6">
-          <p className="text-4xl font-bold text-accent-orange">{pct}%</p>
-          <p className="text-gray-400 mt-2">
-            {correct} / {total} correct
-          </p>
+      <div className="px-4 py-6 bg-ikori-white min-h-screen">
+        <h1 className="text-2xl font-bold font-display text-ikori-dark mb-6">Session Complete</h1>
+        <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-6 text-center mb-6">
+          <div className="bg-ikori-gradient-subtle rounded-ikori p-6">
+            <p className="text-4xl font-bold text-ikori-500">{pct}%</p>
+            <p className="text-ikori-muted mt-2 font-sans">
+              {correct} / {total} correct
+            </p>
+          </div>
         </div>
         <button
           onClick={loadWords}
-          className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold"
+          className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans"
         >
           Practice Again
         </button>
@@ -191,8 +193,8 @@ export default function VocabPage() {
   const word = words[currentIdx];
 
   return (
-    <div className="px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Vocabulary</h1>
+    <div className="px-4 py-6 bg-ikori-white min-h-screen">
+      <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">Vocabulary</h1>
 
       {/* Mode selector */}
       <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
@@ -205,10 +207,10 @@ export default function VocabPage() {
                 generateOptions(words, currentIdx, m.key, words);
               }
             }}
-            className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
+            className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors font-sans ${
               mode === m.key
-                ? "bg-accent-orange text-white"
-                : "bg-navy-light text-gray-400 hover:text-white"
+                ? "bg-ikori-500 text-white"
+                : "bg-ikori-50 text-ikori-body hover:text-ikori-dark"
             }`}
           >
             {m.label}
@@ -221,7 +223,7 @@ export default function VocabPage() {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="flex-1 px-3 py-2 rounded-lg bg-navy-light border border-navy-lighter text-gray-300 text-sm"
+          className="input flex-1"
         >
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>
@@ -232,7 +234,7 @@ export default function VocabPage() {
         <select
           value={difficulty}
           onChange={(e) => setDifficulty(Number(e.target.value))}
-          className="px-3 py-2 rounded-lg bg-navy-light border border-navy-lighter text-gray-300 text-sm"
+          className="input"
         >
           <option value={0}>All Levels</option>
           <option value={1}>Easy</option>
@@ -242,7 +244,7 @@ export default function VocabPage() {
       </div>
 
       {/* Progress */}
-      <div className="flex justify-between text-sm text-gray-400 mb-4">
+      <div className="flex justify-between text-sm text-ikori-muted mb-4 font-sans">
         <span>
           Question {currentIdx + 1} / {Math.min(words.length, 20)}
         </span>
@@ -254,12 +256,12 @@ export default function VocabPage() {
       {/* Question */}
       {word && (
         <div className="mb-6">
-          <div className="bg-navy-light rounded-xl p-6 text-center mb-6">
-            <p className="text-2xl font-bold text-white" style={{ fontSize: "1.5rem" }}>
+          <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-6 text-center mb-6">
+            <p className="text-2xl font-bold text-ikori-dark font-display" style={{ fontSize: "1.5rem" }}>
               {getQuestionText()}
             </p>
             {mode === "usage" && (
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-ikori-muted mt-2 font-sans">
                 Fill in the blank
               </p>
             )}
@@ -269,7 +271,7 @@ export default function VocabPage() {
                   const audio = new Audio(word.audio_url!);
                   audio.play().catch(() => {});
                 }}
-                className="mt-3 text-accent-orange hover:text-orange-400"
+                className="mt-3 text-ikori-500 hover:text-ikori-400"
               >
                 <Volume2 size={20} />
               </button>
@@ -280,32 +282,32 @@ export default function VocabPage() {
           <div className="space-y-3">
             {options.map((option, idx) => {
               let className =
-                "w-full text-left px-4 py-3 rounded-lg border transition-colors flex items-center gap-3 ";
+                "w-full text-left p-4 rounded-ikori-sm border text-sm active:scale-[0.98] transition-all flex items-center gap-3 ";
 
               if (showResult) {
                 if (idx === correctIdx) {
-                  className += "border-green-500 bg-green-500/10 text-green-400";
+                  className += "border-green-300 bg-green-50 text-green-800";
                 } else if (idx === selected && idx !== correctIdx) {
-                  className += "border-red-500 bg-red-500/10 text-red-400";
+                  className += "border-red-300 bg-red-50 text-red-700";
                 } else {
-                  className += "border-navy-lighter bg-navy-light text-gray-500";
+                  className += "border-ikori-border bg-ikori-surface text-ikori-muted";
                 }
               } else {
                 className +=
-                  "border-navy-lighter bg-navy-light text-gray-300 hover:border-gray-500";
+                  "border-ikori-border bg-white text-ikori-dark hover:border-ikori-300";
               }
 
               return (
                 <button key={idx} onClick={() => handleSelect(idx)} className={className}>
-                  <span className="font-medium text-gray-500 w-6">
+                  <span className="font-medium text-ikori-muted w-6 font-sans">
                     {String.fromCharCode(65 + idx)}
                   </span>
-                  <span style={{ fontSize: "1.1rem" }}>{option}</span>
+                  <span className="font-sans" style={{ fontSize: "1.1rem" }}>{option}</span>
                   {showResult && idx === correctIdx && (
-                    <CheckCircle size={18} className="ml-auto text-green-400" />
+                    <CheckCircle size={18} className="ml-auto text-green-600" />
                   )}
                   {showResult && idx === selected && idx !== correctIdx && (
-                    <XCircle size={18} className="ml-auto text-red-400" />
+                    <XCircle size={18} className="ml-auto text-red-600" />
                   )}
                 </button>
               );
@@ -315,14 +317,14 @@ export default function VocabPage() {
           {/* Explanation after answer */}
           {showResult && (
             <div className="mt-4 space-y-3">
-              <div className="bg-navy-light rounded-lg p-4">
-                <p className="text-sm text-gray-300">
-                  <span className="font-semibold text-white">{word.word}</span>{" "}
+              <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
+                <p className="text-sm text-ikori-body font-sans">
+                  <span className="font-semibold text-ikori-dark">{word.word}</span>{" "}
                   ({word.kana}) — {word.meaning_en}
                 </p>
-                <p className="text-sm text-gray-500 mt-1">{word.meaning_bn}</p>
+                <p className="text-sm text-ikori-muted mt-1 font-sans">{word.meaning_bn}</p>
                 {word.example_sentence_jp && (
-                  <p className="text-sm text-gray-400 mt-2 italic">
+                  <p className="text-sm text-ikori-body mt-2 italic font-sans">
                     {word.example_sentence_jp}
                   </p>
                 )}
@@ -330,7 +332,7 @@ export default function VocabPage() {
 
               <button
                 onClick={nextQuestion}
-                className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold"
+                className="btn-primary w-full py-3 rounded-ikori-sm font-semibold font-sans"
               >
                 Next
               </button>
@@ -341,7 +343,7 @@ export default function VocabPage() {
 
       {words.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No vocabulary items found for this filter.</p>
+          <p className="text-ikori-muted font-sans">No vocabulary items found for this filter.</p>
         </div>
       )}
     </div>

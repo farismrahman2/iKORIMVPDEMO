@@ -14,7 +14,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
       value: stats.total_questions,
       sub: `${stats.validated_questions} validated`,
       icon: FileText,
-      color: "text-accent-orange",
+      color: "text-ikori-500",
     },
     {
       label: "Vocabulary",
@@ -46,16 +46,16 @@ export default function StatsCards({ stats }: StatsCardsProps) {
         return (
           <div
             key={card.label}
-            className="bg-navy-light rounded-xl p-4 border border-navy-lighter"
+            className="bg-white rounded-ikori p-4 border border-ikori-border"
           >
             <div className="flex items-center gap-2 mb-2">
               <Icon size={16} className={card.color} />
-              <span className="text-xs text-gray-500 uppercase tracking-wide">
+              <span className="text-xs text-ikori-muted uppercase tracking-wide">
                 {card.label}
               </span>
             </div>
-            <p className="text-2xl font-bold text-white">{card.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{card.sub}</p>
+            <p className="text-2xl font-bold text-ikori-dark">{card.value}</p>
+            <p className="text-xs text-ikori-muted mt-1">{card.sub}</p>
           </div>
         );
       })}

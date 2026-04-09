@@ -55,18 +55,18 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-navy">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-ikori-white">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white font-heading">
-            iKORI <span className="text-accent-orange">N5</span>
+          <h1 className="text-3xl font-display font-bold text-ikori-dark">
+            iKORI <span className="text-ikori-500">N5</span>
           </h1>
-          <p className="text-gray-400 mt-2">Create your account</p>
+          <p className="text-ikori-muted mt-2 text-sm">Create your account</p>
         </div>
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm text-gray-300 mb-1">
+            <label htmlFor="name" className="block text-sm font-medium text-ikori-body mb-1">
               Name
             </label>
             <input
@@ -74,14 +74,14 @@ export default function SignupPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-navy-light border border-navy-lighter text-white placeholder-gray-500 focus:outline-none focus:border-accent-orange transition-colors"
+              className="input"
               placeholder="Your name"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm text-gray-300 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-ikori-body mb-1">
               Email
             </label>
             <input
@@ -89,28 +89,28 @@ export default function SignupPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-navy-light border border-navy-lighter text-white placeholder-gray-500 focus:outline-none focus:border-accent-orange transition-colors"
+              className="input"
               placeholder="you@example.com"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm text-gray-300 mb-1">
-              Phone <span className="text-gray-500">(optional)</span>
+            <label htmlFor="phone" className="block text-sm font-medium text-ikori-body mb-1">
+              Phone <span className="text-ikori-muted">(optional)</span>
             </label>
             <input
               id="phone"
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-navy-light border border-navy-lighter text-white placeholder-gray-500 focus:outline-none focus:border-accent-orange transition-colors"
+              className="input"
               placeholder="+880..."
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm text-gray-300 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-ikori-body mb-1">
               Password
             </label>
             <input
@@ -118,7 +118,7 @@ export default function SignupPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-navy-light border border-navy-lighter text-white placeholder-gray-500 focus:outline-none focus:border-accent-orange transition-colors"
+              className="input"
               placeholder="At least 6 characters"
               minLength={6}
               required
@@ -126,7 +126,7 @@ export default function SignupPage() {
           </div>
 
           {error && (
-            <div className="text-red-400 text-sm bg-red-400/10 rounded-lg p-3">
+            <div className="text-red-600 text-sm bg-red-50 rounded-ikori-sm p-3 border border-red-200">
               {error}
             </div>
           )}
@@ -134,15 +134,15 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Creating account..." : "Create Account"}
           </button>
         </form>
 
-        <p className="text-center text-gray-400 mt-6">
+        <p className="text-center text-ikori-muted text-sm mt-6">
           Already have an account?{" "}
-          <Link href="/login" className="text-accent-orange hover:underline">
+          <Link href="/login" className="text-ikori-500 font-medium hover:underline">
             Sign in
           </Link>
         </p>

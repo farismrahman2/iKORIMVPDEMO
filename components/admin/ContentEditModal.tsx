@@ -44,17 +44,17 @@ export default function ContentEditModal({
   }
 
   const inputClass =
-    "w-full px-3 py-2 rounded-lg bg-navy border border-navy-lighter text-gray-300 text-sm focus:outline-none focus:border-accent-orange";
-  const labelClass = "text-xs text-gray-500 mb-1 block";
+    "w-full px-3 py-2 rounded-ikori-sm bg-ikori-surface border border-ikori-border text-ikori-body text-sm focus:outline-none focus:border-ikori-500";
+  const labelClass = "text-xs text-ikori-muted mb-1 block";
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center overflow-y-auto pt-10 pb-10">
-      <div className="bg-navy-light rounded-xl w-full max-w-2xl mx-4 border border-navy-lighter">
-        <div className="flex items-center justify-between p-4 border-b border-navy-lighter">
-          <h2 className="text-lg font-bold text-white">
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-start justify-center overflow-y-auto pt-10 pb-10">
+      <div className="bg-white rounded-ikori w-full max-w-2xl mx-4 border border-ikori-border">
+        <div className="flex items-center justify-between p-4 border-b border-ikori-border">
+          <h2 className="text-lg font-bold text-ikori-dark">
             Edit {type === "vocabulary" ? "Vocabulary" : "Question"}
           </h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white">
+          <button onClick={onClose} className="text-ikori-muted hover:text-ikori-dark">
             <X size={20} />
           </button>
         </div>
@@ -259,17 +259,17 @@ export default function ContentEditModal({
           )}
         </div>
 
-        <div className="flex gap-3 p-4 border-t border-navy-lighter">
+        <div className="flex gap-3 p-4 border-t border-ikori-border">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 rounded-lg border border-navy-lighter text-gray-400 hover:text-white transition-colors"
+            className="flex-1 py-2.5 rounded-ikori-sm border border-ikori-border text-ikori-muted hover:text-ikori-dark transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex-1 py-2.5 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-ikori-sm bg-ikori-500 text-white font-semibold hover:bg-ikori-600 transition-colors disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>

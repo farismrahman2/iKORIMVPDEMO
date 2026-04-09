@@ -26,17 +26,17 @@ export default function ProgressBar({
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center text-sm">
-        <span className="text-gray-400">
+        <span className="text-ikori-muted">
           {current} / {total}
         </span>
         {currentSection && (
-          <span className="text-accent-gold text-xs font-medium">
+          <span className="text-ikori-500 text-xs font-medium">
             {SECTION_LABELS[currentSection]}
           </span>
         )}
       </div>
 
-      <div className="h-2 bg-navy-light rounded-full overflow-hidden relative">
+      <div className="h-[3px] bg-ikori-100 rounded-full overflow-hidden relative">
         {sections ? (
           // Multi-section progress bar
           <div className="flex h-full">
@@ -57,13 +57,13 @@ export default function ProgressBar({
                   style={{ width: `${sectionWidth}%` }}
                 >
                   <div
-                    className="h-full bg-accent-orange rounded-full transition-all duration-300"
+                    className="h-full bg-ikori-500 rounded-full transition-all duration-300"
                     style={{
                       width: current > sectionStart ? `${Math.min(filled, 100)}%` : "0%",
                     }}
                   />
                   {i > 0 && (
-                    <div className="absolute left-0 top-0 bottom-0 w-px bg-navy-lighter" />
+                    <div className="absolute left-0 top-0 bottom-0 w-px bg-ikori-200" />
                   )}
                 </div>
               );
@@ -72,7 +72,7 @@ export default function ProgressBar({
         ) : (
           // Simple progress bar
           <div
-            className="h-full bg-accent-orange rounded-full transition-all duration-300"
+            className="h-full bg-ikori-500 rounded-full transition-all duration-300"
             style={{ width: `${percentage}%` }}
           />
         )}

@@ -10,31 +10,27 @@ interface ResultsBandProps {
 
 const BAND_CONFIG: Record<
   ReadinessBand,
-  { label: string; color: string; bg: string; border: string }
+  { label: string; color: string; barColor: string }
 > = {
   strong: {
     label: "Strong Pass",
-    color: "text-band-strong",
-    bg: "bg-band-strong/20",
-    border: "border-band-strong",
+    color: "text-ikori-500",
+    barColor: "bg-ikori-500",
   },
   probable: {
     label: "Probable Pass",
-    color: "text-band-probable",
-    bg: "bg-band-probable/20",
-    border: "border-band-probable",
+    color: "text-blue-500",
+    barColor: "bg-blue-500",
   },
   borderline: {
     label: "Borderline",
-    color: "text-band-borderline",
-    bg: "bg-band-borderline/20",
-    border: "border-band-borderline",
+    color: "text-amber-500",
+    barColor: "bg-amber-500",
   },
   high_risk: {
     label: "High Risk",
-    color: "text-band-high_risk",
-    bg: "bg-band-high_risk/20",
-    border: "border-band-high_risk",
+    color: "text-red-500",
+    barColor: "bg-red-500",
   },
 };
 
@@ -43,10 +39,10 @@ function ScoreBar({ label, score, color }: { label: string; score: number; color
   return (
     <div>
       <div className="flex justify-between text-sm mb-1">
-        <span className="text-gray-400">{label}</span>
-        <span className="text-white font-medium">{Math.round(safeScore)}%</span>
+        <span className="text-ikori-muted">{label}</span>
+        <span className="text-ikori-dark font-medium">{Math.round(safeScore)}%</span>
       </div>
-      <div className="h-2 bg-navy-lighter rounded-full overflow-hidden">
+      <div className="h-2 bg-ikori-100 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-500 ${color}`}
           style={{ width: `${Math.min(safeScore, 100)}%` }}
@@ -62,39 +58,36 @@ export default function ResultsBand({
   sectionScores,
 }: ResultsBandProps) {
   const config = BAND_CONFIG[readinessBand];
+  const score = Math.round(weightedScore);
 
   return (
     <div className="space-y-6">
-      {/* Main band display */}
-      <div className={`${config.bg} border ${config.border} rounded-2xl p-8 text-center`}>
-        <p className={`text-5xl font-bold ${config.color}`}>
-          {Math.round(weightedScore)}%
-        </p>
-        <p className={`text-xl font-semibold mt-2 ${config.color}`}>
-          {config.label}
-        </p>
-        <p className="text-gray-400 text-sm mt-2">Readiness Score</p>
+      {/* Main band display — gradient hero */}
+      <div className="bg-ikori-gradient rounded-ikori p-5 text-center space-y-2">
+        <p className="text-ikori-900 text-5xl font-display font-bold">{score}%</p>
+        <p className="text-ikori-800 text-xl font-semibold">{config.label}</p>
+        <p className="text-ikori-700 text-sm">Readiness Score</p>
       </div>
 
       {/* Section breakdown */}
-      <div className="bg-navy-light rounded-xl p-4 space-y-4">
-        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">
+      <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 space-y-4">
+        <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide">
           Section Scores
         </h3>
         <ScoreBar
           label="Vocabulary"
           score={sectionScores.vocab}
-          color={sectionScores.vocab >= 60 ? "bg-band-strong" : "bg-band-high_risk"}
+          color={sectionScores.vocab >= 60 ? "bg-ikori-500" : "bg-red-500"}
         />
         <ScoreBar
           label="Grammar & Reading"
           score={sectionScores.grammar_reading}
-          color={sectionScores.grammar_reading >= 60 ? "bg-band-strong" : "bg-band-high_risk"}
+          color={sectionScores.grammar_reading >= 60 ? "bg-ikori-500" : "bg-red-500"}
         />
         <ScoreBar
           label="Listening"
           score={sectionScores.listening}
-          color={sectionScores.listening >= 60 ? "bg-band-strong" : "bg-band-high_risk"}
+          color={sectionScores.listening >= 60 ? "bg-ikori-500" : "bg-red-500"}
         />
       </div>
     </div>

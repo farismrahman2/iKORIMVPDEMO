@@ -116,7 +116,7 @@ export default function ContentPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-6">Content Browser</h1>
+      <h1 className="text-2xl font-display font-bold text-ikori-dark mb-6">Content Browser</h1>
 
       {stats && <StatsCards stats={stats} />}
 
@@ -126,10 +126,10 @@ export default function ContentPage() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-ikori-sm text-sm font-medium transition-colors ${
               tab === t
-                ? "bg-accent-orange text-white"
-                : "bg-navy-light text-gray-400 hover:text-white"
+                ? "bg-ikori-500 text-white"
+                : "bg-white text-ikori-muted hover:text-ikori-dark"
             }`}
           >
             {t === "vocabulary" ? "Vocabulary" : "Questions"}
@@ -140,12 +140,12 @@ export default function ContentPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-2 mb-4">
         <div className="relative flex-1 min-w-[200px]">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ikori-muted" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg bg-navy-light border border-navy-lighter text-gray-300 text-sm focus:outline-none focus:border-accent-orange"
+            className="w-full pl-9 pr-3 py-2 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body text-sm focus:outline-none focus:border-accent-orange"
           />
         </div>
 
@@ -153,7 +153,7 @@ export default function ContentPage() {
           <select
             value={section}
             onChange={(e) => setSection(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-navy-light border border-navy-lighter text-gray-300 text-sm"
+            className="px-3 py-2 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body text-sm"
           >
             <option value="">All Sections</option>
             <option value="vocab">Vocab</option>
@@ -166,7 +166,7 @@ export default function ContentPage() {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-navy-light border border-navy-lighter text-gray-300 text-sm"
+            className="px-3 py-2 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body text-sm"
           >
             <option value="">All Categories</option>
             {["greetings", "numbers", "time", "family", "food", "verbs", "adjectives", "body", "nature", "daily_life"].map((c) => (
@@ -178,7 +178,7 @@ export default function ContentPage() {
         <select
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-navy-light border border-navy-lighter text-gray-300 text-sm"
+          className="px-3 py-2 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body text-sm"
         >
           <option value="">All Difficulties</option>
           {tab === "vocabulary" ? (
@@ -199,7 +199,7 @@ export default function ContentPage() {
         <select
           value={validated}
           onChange={(e) => setValidated(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-navy-light border border-navy-lighter text-gray-300 text-sm"
+          className="px-3 py-2 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body text-sm"
         >
           <option value="">All Status</option>
           <option value="true">Validated</option>
@@ -208,16 +208,16 @@ export default function ContentPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-navy-light rounded-xl border border-navy-lighter overflow-hidden">
+      <div className="bg-white rounded-ikori border border-ikori-border overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-gray-500 animate-pulse">Loading content...</div>
+          <div className="p-8 text-center text-ikori-muted animate-pulse">Loading content...</div>
         ) : items.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">No items found.</div>
+          <div className="p-8 text-center text-ikori-muted">No items found.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-gray-500 text-left border-b border-navy-lighter">
+                <tr className="text-ikori-muted text-left border-b border-ikori-border">
                   {tab === "vocabulary" ? (
                     <>
                       <th className="p-3">Word</th>
@@ -245,49 +245,49 @@ export default function ContentPage() {
                 {items.map((item) => (
                   <tr
                     key={item.id}
-                    className="border-b border-navy-lighter hover:bg-navy-lighter/30"
+                    className="border-b border-ikori-border hover:bg-ikori-surface/30"
                   >
                     {tab === "vocabulary" ? (
                       <>
-                        <td className="p-3 text-white font-medium">
+                        <td className="p-3 text-ikori-dark font-medium">
                           {(item as Vocabulary).word}
                         </td>
-                        <td className="p-3 text-gray-400">
+                        <td className="p-3 text-ikori-muted">
                           {(item as Vocabulary).kana}
                         </td>
-                        <td className="p-3 text-gray-400 max-w-[200px] truncate">
+                        <td className="p-3 text-ikori-muted max-w-[200px] truncate">
                           {(item as Vocabulary).meaning_en}
                         </td>
                         <td className="p-3">
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-navy-lighter text-gray-400">
+                          <span className="text-xs px-2 py-0.5 rounded-ikori-full bg-ikori-surface text-ikori-muted">
                             {(item as Vocabulary).category}
                           </span>
                         </td>
-                        <td className="p-3 text-gray-400">
+                        <td className="p-3 text-ikori-muted">
                           {(item as Vocabulary).difficulty}
                         </td>
                       </>
                     ) : (
                       <>
-                        <td className="p-3 text-white max-w-[300px] truncate">
+                        <td className="p-3 text-ikori-dark max-w-[300px] truncate">
                           {(item as Question).question_text}
                         </td>
                         <td className="p-3">
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-navy-lighter text-gray-400">
+                          <span className="text-xs px-2 py-0.5 rounded-ikori-full bg-ikori-surface text-ikori-muted">
                             {(item as Question).section}
                           </span>
                         </td>
-                        <td className="p-3 text-gray-400 text-xs">
+                        <td className="p-3 text-ikori-muted text-xs">
                           {(item as Question).skill_tag}
                         </td>
-                        <td className="p-3 text-gray-400">
+                        <td className="p-3 text-ikori-muted">
                           {(item as Question).difficulty}
                         </td>
                         <td className="p-3">
                           {(item as Question).audio_url ? (
                             <span className="text-green-400 text-xs">Yes</span>
                           ) : (
-                            <span className="text-gray-600 text-xs">No</span>
+                            <span className="text-ikori-muted text-xs">No</span>
                           )}
                         </td>
                       </>
@@ -300,7 +300,7 @@ export default function ContentPage() {
                         {item.validated ? (
                           <CheckCircle size={16} className="text-green-400" />
                         ) : (
-                          <XCircle size={16} className="text-gray-600" />
+                          <XCircle size={16} className="text-ikori-muted" />
                         )}
                       </button>
                     </td>
@@ -308,13 +308,13 @@ export default function ContentPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => setEditItem(item)}
-                          className="text-gray-500 hover:text-accent-orange"
+                          className="text-ikori-muted hover:text-ikori-500"
                         >
                           <Edit2 size={14} />
                         </button>
                         <button
                           onClick={() => deleteItem(item)}
-                          className="text-gray-500 hover:text-red-400"
+                          className="text-ikori-muted hover:text-red-400"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -329,22 +329,22 @@ export default function ContentPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-navy-lighter">
-            <span className="text-xs text-gray-500">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-ikori-border">
+            <span className="text-xs text-ikori-muted">
               {total} items — page {page} of {totalPages}
             </span>
             <div className="flex gap-1">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="p-1.5 rounded-lg hover:bg-navy-lighter text-gray-400 disabled:opacity-30"
+                className="p-1.5 rounded-ikori-sm hover:bg-ikori-surface text-ikori-muted disabled:opacity-30"
               >
                 <ChevronLeft size={16} />
               </button>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="p-1.5 rounded-lg hover:bg-navy-lighter text-gray-400 disabled:opacity-30"
+                className="p-1.5 rounded-ikori-sm hover:bg-ikori-surface text-ikori-muted disabled:opacity-30"
               >
                 <ChevronRight size={16} />
               </button>

@@ -150,17 +150,17 @@ export default function ImportPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-6">Content Import</h1>
+      <h1 className="text-2xl font-display font-bold text-ikori-dark mb-6">Content Import</h1>
 
       {/* JSON Input */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <label className="text-sm font-medium text-gray-300">
+          <label className="text-sm font-medium text-ikori-body">
             Paste JSON Content
           </label>
           {validation && (
             <span
-              className={`text-xs px-2 py-1 rounded-full ${
+              className={`text-xs px-2 py-1 rounded-ikori-full ${
                 validation.type === "vocabulary"
                   ? "bg-band-probable/20 text-band-probable"
                   : "bg-accent-gold/20 text-accent-gold"
@@ -174,13 +174,13 @@ export default function ImportPage() {
           value={jsonInput}
           onChange={(e) => setJsonInput(e.target.value)}
           placeholder='Paste your JSON here...\n\nExpected format:\n{\n  "type": "vocabulary" | "questions",\n  "batch_id": "batch_001",\n  "validated": true,\n  "items": [...]\n}'
-          className="w-full min-h-[400px] px-4 py-3 rounded-lg bg-navy-light border border-navy-lighter text-gray-300 font-mono text-sm placeholder-gray-600 focus:outline-none focus:border-accent-orange resize-y"
+          className="w-full min-h-[400px] px-4 py-3 rounded-ikori-sm bg-white border border-ikori-border text-ikori-body font-mono text-sm placeholder-gray-600 focus:outline-none focus:border-accent-orange resize-y"
         />
       </div>
 
       {/* Parse Error */}
       {parseError && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm mb-6">
+        <div className="flex items-center gap-2 p-3 rounded-ikori-sm bg-red-500/10 border border-red-500/30 text-red-400 text-sm mb-6">
           <XCircle size={16} />
           {parseError}
         </div>
@@ -188,23 +188,23 @@ export default function ImportPage() {
 
       {/* Validation Panel */}
       {validation && (
-        <div className="bg-navy-light rounded-xl p-4 mb-6 space-y-3">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">
+        <div className="bg-white rounded-ikori p-4 mb-6 space-y-3">
+          <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide">
             Validation Summary
           </h3>
 
           <div className="grid grid-cols-3 gap-3">
-            <div className="p-3 rounded-lg bg-navy-lighter text-center">
-              <p className="text-2xl font-bold text-white">{validation.totalItems}</p>
-              <p className="text-xs text-gray-500">Total Items</p>
+            <div className="p-3 rounded-ikori-sm bg-ikori-surface text-center">
+              <p className="text-2xl font-display font-bold text-ikori-dark">{validation.totalItems}</p>
+              <p className="text-xs text-ikori-muted">Total Items</p>
             </div>
-            <div className="p-3 rounded-lg bg-green-500/10 text-center">
-              <p className="text-2xl font-bold text-green-400">{validation.validCount}</p>
-              <p className="text-xs text-gray-500">Valid</p>
+            <div className="p-3 rounded-ikori-sm bg-green-500/10 text-center">
+              <p className="text-2xl font-display font-bold text-green-400">{validation.validCount}</p>
+              <p className="text-xs text-ikori-muted">Valid</p>
             </div>
-            <div className="p-3 rounded-lg bg-red-500/10 text-center">
-              <p className="text-2xl font-bold text-red-400">{validation.errorCount}</p>
-              <p className="text-xs text-gray-500">Errors</p>
+            <div className="p-3 rounded-ikori-sm bg-red-500/10 text-center">
+              <p className="text-2xl font-display font-bold text-red-400">{validation.errorCount}</p>
+              <p className="text-xs text-ikori-muted">Errors</p>
             </div>
           </div>
 
@@ -228,11 +228,11 @@ export default function ImportPage() {
           <button
             onClick={handleImport}
             disabled={importing || validation.validCount === 0}
-            className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-ikori-sm bg-ikori-500 text-white font-semibold hover:bg-ikori-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {importing ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-ikori-full animate-spin" />
                 Importing...
               </>
             ) : (
@@ -248,7 +248,7 @@ export default function ImportPage() {
       {/* Import Result */}
       {importResult && (
         <div
-          className={`p-4 rounded-lg mb-6 ${
+          className={`p-4 rounded-ikori-sm mb-6 ${
             importResult.errors.length === 0
               ? "bg-green-500/10 border border-green-500/30"
               : "bg-accent-gold/10 border border-accent-gold/30"
@@ -256,9 +256,9 @@ export default function ImportPage() {
         >
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle size={18} className="text-green-400" />
-            <span className="text-white font-medium">Import Complete</span>
+            <span className="text-ikori-dark font-medium">Import Complete</span>
           </div>
-          <p className="text-sm text-gray-300">
+          <p className="text-sm text-ikori-body">
             {importResult.imported} imported, {importResult.skipped} skipped
           </p>
           {importResult.errors.length > 0 && (
@@ -272,18 +272,18 @@ export default function ImportPage() {
       )}
 
       {/* Import History */}
-      <div className="bg-navy-light rounded-xl p-4">
-        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+      <div className="bg-white rounded-ikori p-4">
+        <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3">
           Import History
         </h3>
 
         {history.length === 0 ? (
-          <p className="text-sm text-gray-600">No imports yet.</p>
+          <p className="text-sm text-ikori-muted">No imports yet.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-gray-500 text-left">
+                <tr className="text-ikori-muted text-left">
                   <th className="pb-2 pr-4">Date</th>
                   <th className="pb-2 pr-4">Batch ID</th>
                   <th className="pb-2 pr-4">Type</th>
@@ -294,19 +294,19 @@ export default function ImportPage() {
               </thead>
               <tbody>
                 {history.map((log) => (
-                  <tr key={log.id} className="border-t border-navy-lighter">
-                    <td className="py-2 pr-4 text-gray-400">
+                  <tr key={log.id} className="border-t border-ikori-border">
+                    <td className="py-2 pr-4 text-ikori-muted">
                       <div className="flex items-center gap-1">
                         <Clock size={12} />
                         {new Date(log.created_at).toLocaleDateString()}
                       </div>
                     </td>
-                    <td className="py-2 pr-4 text-gray-300 font-mono text-xs">
+                    <td className="py-2 pr-4 text-ikori-body font-mono text-xs">
                       {log.batch_id}
                     </td>
                     <td className="py-2 pr-4">
                       <span
-                        className={`text-xs px-2 py-0.5 rounded-full ${
+                        className={`text-xs px-2 py-0.5 rounded-ikori-full ${
                           log.content_type === "vocabulary"
                             ? "bg-band-probable/20 text-band-probable"
                             : "bg-accent-gold/20 text-accent-gold"
@@ -316,7 +316,7 @@ export default function ImportPage() {
                       </span>
                     </td>
                     <td className="py-2 pr-4 text-green-400">{log.items_imported}</td>
-                    <td className="py-2 pr-4 text-gray-500">{log.items_skipped}</td>
+                    <td className="py-2 pr-4 text-ikori-muted">{log.items_skipped}</td>
                     <td className="py-2 text-red-400">{log.items_errored}</td>
                   </tr>
                 ))}

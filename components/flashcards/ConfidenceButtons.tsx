@@ -7,11 +7,11 @@ interface ConfidenceButtonsProps {
   disabled?: boolean;
 }
 
-const BUTTONS: { confidence: Confidence; label: string; color: string; bgColor: string }[] = [
-  { confidence: "again", label: "Again", color: "text-red-400", bgColor: "bg-red-500/10 border-red-500/30 hover:bg-red-500/20" },
-  { confidence: "hard", label: "Hard", color: "text-orange-400", bgColor: "bg-orange-500/10 border-orange-500/30 hover:bg-orange-500/20" },
-  { confidence: "good", label: "Good", color: "text-blue-400", bgColor: "bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20" },
-  { confidence: "easy", label: "Easy", color: "text-green-400", bgColor: "bg-green-500/10 border-green-500/30 hover:bg-green-500/20" },
+const BUTTONS: { confidence: Confidence; label: string; classes: string }[] = [
+  { confidence: "again", label: "Again", classes: "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100" },
+  { confidence: "hard", label: "Hard", classes: "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100" },
+  { confidence: "good", label: "Good", classes: "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100" },
+  { confidence: "easy", label: "Easy", classes: "bg-ikori-50 text-ikori-700 border border-ikori-200 hover:bg-ikori-100" },
 ];
 
 export default function ConfidenceButtons({ onRate, disabled }: ConfidenceButtonsProps) {
@@ -22,7 +22,7 @@ export default function ConfidenceButtons({ onRate, disabled }: ConfidenceButton
           key={btn.confidence}
           onClick={() => onRate(btn.confidence)}
           disabled={disabled}
-          className={`py-3 rounded-lg border font-semibold text-sm transition-colors ${btn.color} ${btn.bgColor} disabled:opacity-50 disabled:cursor-not-allowed`}
+          className={`min-h-[48px] rounded-ikori-sm font-semibold text-sm transition-colors font-sans ${btn.classes} disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           {btn.label}
         </button>

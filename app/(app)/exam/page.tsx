@@ -13,7 +13,7 @@ interface ExamOption {
   questions: number;
   minutes: number;
   icon: typeof FileText;
-  color: string;
+  iconColor: string;
 }
 
 const EXAM_OPTIONS: ExamOption[] = [
@@ -24,7 +24,7 @@ const EXAM_OPTIONS: ExamOption[] = [
     questions: 75,
     minutes: 75,
     icon: FileText,
-    color: "bg-accent-orange/10 text-accent-orange border-accent-orange/30",
+    iconColor: "text-ikori-500",
   },
   {
     type: "section",
@@ -34,7 +34,7 @@ const EXAM_OPTIONS: ExamOption[] = [
     questions: 25,
     minutes: 20,
     icon: BookOpen,
-    color: "bg-band-probable/10 text-band-probable border-band-probable/30",
+    iconColor: "text-blue-500",
   },
   {
     type: "section",
@@ -44,7 +44,7 @@ const EXAM_OPTIONS: ExamOption[] = [
     questions: 30,
     minutes: 25,
     icon: PenLine,
-    color: "bg-accent-gold/10 text-accent-gold border-accent-gold/30",
+    iconColor: "text-amber-500",
   },
   {
     type: "section",
@@ -54,7 +54,7 @@ const EXAM_OPTIONS: ExamOption[] = [
     questions: 20,
     minutes: 20,
     icon: Headphones,
-    color: "bg-band-strong/10 text-band-strong border-band-strong/30",
+    iconColor: "text-ikori-600",
   },
   {
     type: "speed",
@@ -63,7 +63,7 @@ const EXAM_OPTIONS: ExamOption[] = [
     questions: 25,
     minutes: 15,
     icon: Zap,
-    color: "bg-band-borderline/10 text-band-borderline border-band-borderline/30",
+    iconColor: "text-amber-500",
   },
 ];
 
@@ -94,9 +94,9 @@ export default function ExamPage() {
   }
 
   return (
-    <div className="px-4 py-6">
-      <h1 className="text-2xl font-bold mb-2">Start Exam</h1>
-      <p className="text-gray-400 text-sm mb-6">
+    <div className="px-4 py-6 bg-ikori-white min-h-screen">
+      <h1 className="text-2xl font-display font-bold text-ikori-dark mb-2">Start Exam</h1>
+      <p className="text-ikori-muted text-sm mb-6">
         Choose an exam type to begin practicing
       </p>
 
@@ -109,15 +109,15 @@ export default function ExamPage() {
               key={option.label}
               onClick={() => startExam(option)}
               disabled={creating}
-              className={`w-full flex items-start gap-4 p-4 rounded-xl border transition-colors hover:opacity-80 disabled:opacity-50 ${option.color}`}
+              className="w-full flex items-start gap-4 bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 transition-all active:scale-[0.98] hover:shadow-ikori disabled:opacity-50"
             >
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-white/5">
+              <div className={`w-10 h-10 rounded-ikori-sm flex items-center justify-center bg-ikori-50 ${option.iconColor}`}>
                 <Icon size={20} />
               </div>
               <div className="flex-1 text-left">
-                <p className="font-semibold">{option.label}</p>
-                <p className="text-xs opacity-70 mt-0.5">{option.description}</p>
-                <div className="flex items-center gap-3 mt-2 text-xs opacity-60">
+                <p className="font-semibold text-ikori-dark">{option.label}</p>
+                <p className="text-xs text-ikori-muted mt-0.5">{option.description}</p>
+                <div className="flex items-center gap-3 mt-2 text-xs text-ikori-muted">
                   <span>{option.questions} questions</span>
                   <span className="flex items-center gap-1">
                     <Clock size={12} />
@@ -132,9 +132,9 @@ export default function ExamPage() {
 
       {creating && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-navy-light rounded-xl p-6 text-center">
-            <div className="w-8 h-8 border-2 border-accent-orange border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-gray-300">Preparing your exam...</p>
+          <div className="bg-white rounded-ikori shadow-ikori-md p-6 text-center">
+            <div className="w-8 h-8 border-2 border-ikori-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-ikori-body">Preparing your exam...</p>
           </div>
         </div>
       )}

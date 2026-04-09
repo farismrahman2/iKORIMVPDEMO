@@ -101,15 +101,15 @@ export default function ProgressPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-pulse text-gray-400">Loading progress...</div>
+      <div className="flex items-center justify-center min-h-screen bg-ikori-white">
+        <div className="animate-pulse text-ikori-muted font-sans">Loading progress...</div>
       </div>
     );
   }
 
   return (
-    <div className="px-4 py-6 space-y-6">
-      <h1 className="text-2xl font-bold">Progress</h1>
+    <div className="px-4 py-6 space-y-6 bg-ikori-white min-h-screen">
+      <h1 className="text-2xl font-bold font-display text-ikori-dark">Progress</h1>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3">
@@ -119,17 +119,17 @@ export default function ProgressPage() {
           { label: "Current Streak", value: stats.streakRecord },
           { label: "Cards Reviewed", value: stats.flashcardsReviewed },
         ].map((stat) => (
-          <div key={stat.label} className="bg-navy-light rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-accent-orange">{stat.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
+          <div key={stat.label} className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 text-center">
+            <p className="text-2xl font-bold text-ikori-500 font-display">{stat.value}</p>
+            <p className="text-xs text-ikori-muted mt-1 font-sans">{stat.label}</p>
           </div>
         ))}
       </div>
 
       {/* Score Trend Chart */}
       {sessions.length > 1 && (
-        <div className="bg-navy-light rounded-xl p-4">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+        <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
+          <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3 font-sans">
             Score Trend
           </h3>
           <ScoreTrendChart sessions={sessions} />
@@ -137,12 +137,12 @@ export default function ProgressPage() {
       )}
 
       {/* Exam History */}
-      <div className="bg-navy-light rounded-xl p-4">
-        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+      <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
+        <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3 font-sans">
           Exam History
         </h3>
         {sessions.length === 0 ? (
-          <p className="text-gray-500 text-sm text-center py-4">
+          <p className="text-ikori-muted text-sm text-center py-4 font-sans">
             No exams completed yet.
           </p>
         ) : (
@@ -150,19 +150,19 @@ export default function ProgressPage() {
             {[...sessions].reverse().map((session) => (
               <div
                 key={session.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-navy hover:bg-navy-lighter transition-colors"
+                className="flex items-center justify-between p-3 rounded-ikori-sm bg-ikori-surface hover:bg-ikori-50 transition-colors"
               >
                 <div>
-                  <p className="text-sm text-white capitalize">
+                  <p className="text-sm text-ikori-dark capitalize font-sans">
                     {session.exam_type} Mock
                     {session.section_filter && ` (${session.section_filter})`}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-ikori-muted font-sans">
                     {new Date(session.started_at).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-white">
+                  <p className="text-sm font-bold text-ikori-dark font-sans">
                     {Math.round(session.weighted_score || 0)}%
                   </p>
                   <p
@@ -183,30 +183,30 @@ export default function ProgressPage() {
 
       {/* Skill Improvement */}
       {skills.length > 0 && (
-        <div className="bg-navy-light rounded-xl p-4">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+        <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
+          <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3 font-sans">
             All Skills
           </h3>
           <div className="space-y-3">
             {skills.map((skill) => (
               <div key={skill.skill_tag}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-300 capitalize">
+                  <span className="text-ikori-body capitalize font-sans">
                     {skill.skill_tag.replace(/_/g, " ")}
                   </span>
                   <span
-                    className={`font-medium ${
+                    className={`font-medium font-sans ${
                       skill.score < 60
                         ? "text-band-high_risk"
                         : skill.score >= 80
                         ? "text-band-strong"
-                        : "text-gray-300"
+                        : "text-ikori-body"
                     }`}
                   >
                     {Math.round(skill.score)}%
                   </span>
                 </div>
-                <div className="h-1.5 bg-navy-lighter rounded-full overflow-hidden">
+                <div className="h-1.5 bg-ikori-50 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all ${
                       skill.score < 60
@@ -261,28 +261,28 @@ function ScoreTrendChart({ sessions }: { sessions: ExamSession[] }) {
               y1={y}
               x2={width - padding}
               y2={y}
-              stroke="#1A2A44"
+              stroke="#E5E7EB"
               strokeWidth="1"
               strokeDasharray="4"
             />
-            <text x={padding - 5} y={y + 3} fill="#6B7280" fontSize="8" textAnchor="end">
+            <text x={padding - 5} y={y + 3} fill="#9CA3AF" fontSize="8" textAnchor="end">
               {pct}%
             </text>
           </g>
         );
       })}
 
-      {/* Line */}
-      <path d={pathD} fill="none" stroke="#F97316" strokeWidth="2" />
+      {/* Line — ikori-500 green */}
+      <path d={pathD} fill="none" stroke="#34D399" strokeWidth="2" />
 
-      {/* Dots */}
+      {/* Dots — ikori-500 green */}
       {points.map((p, i) => (
         <circle
           key={i}
           cx={p.x}
           cy={p.y}
           r="3"
-          fill="#F97316"
+          fill="#34D399"
         />
       ))}
     </svg>

@@ -93,8 +93,8 @@ export default function ExamResultsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-pulse text-gray-400">Loading results...</div>
+      <div className="flex items-center justify-center min-h-screen bg-ikori-white">
+        <div className="animate-pulse text-ikori-muted">Loading results...</div>
       </div>
     );
   }
@@ -115,22 +115,22 @@ export default function ExamResultsPage() {
     }
 
     return (
-      <div className="px-4 py-6">
+      <div className="px-4 py-6 bg-ikori-white min-h-screen">
         <button
           onClick={() => setReviewMode(false)}
-          className="flex items-center gap-1 text-gray-400 hover:text-white mb-4"
+          className="flex items-center gap-1 text-ikori-muted hover:text-ikori-dark mb-4 transition-colors"
         >
           <ArrowLeft size={18} />
           Back to Results
         </button>
 
         <div className="mb-4">
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-ikori-muted">
             Wrong Answer {reviewIdx + 1} of {wrongResponses.length}
           </p>
-          <div className="h-1 bg-navy-light rounded-full mt-2 overflow-hidden">
+          <div className="h-[3px] bg-ikori-100 rounded-full mt-2 overflow-hidden">
             <div
-              className="h-full bg-accent-orange rounded-full"
+              className="h-full bg-ikori-500 rounded-full transition-all duration-300"
               style={{
                 width: `${((reviewIdx + 1) / wrongResponses.length) * 100}%`,
               }}
@@ -150,7 +150,7 @@ export default function ExamResultsPage() {
           <button
             onClick={() => setReviewIdx((i) => Math.max(0, i - 1))}
             disabled={reviewIdx === 0}
-            className="flex-1 flex items-center justify-center gap-1 py-3 rounded-lg border border-navy-lighter text-gray-300 disabled:opacity-30"
+            className="flex-1 flex items-center justify-center gap-1 py-3 rounded-full border border-ikori-border text-ikori-body disabled:opacity-30 transition-colors"
           >
             <ChevronLeft size={18} />
             Previous
@@ -160,7 +160,7 @@ export default function ExamResultsPage() {
               setReviewIdx((i) => Math.min(wrongResponses.length - 1, i + 1))
             }
             disabled={reviewIdx === wrongResponses.length - 1}
-            className="flex-1 flex items-center justify-center gap-1 py-3 rounded-lg bg-accent-orange text-white disabled:opacity-30"
+            className="flex-1 flex items-center justify-center gap-1 py-3 rounded-full bg-ikori-500 text-white font-semibold disabled:opacity-30 transition-colors"
           >
             Next
             <ChevronRight size={18} />
@@ -171,8 +171,8 @@ export default function ExamResultsPage() {
   }
 
   return (
-    <div className="px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6">Exam Results</h1>
+    <div className="px-4 py-6 bg-ikori-white min-h-screen">
+      <h1 className="text-2xl font-display font-bold text-ikori-dark mb-6">Exam Results</h1>
 
       <ResultsBand
         readinessBand={(session.readiness_band || "high_risk") as ReadinessBand}
@@ -186,8 +186,8 @@ export default function ExamResultsPage() {
 
       {/* Skill breakdown */}
       {skillScores.length > 0 && (
-        <div className="bg-navy-light rounded-xl p-4 mt-6">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+        <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 mt-6">
+          <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3">
             Skills Breakdown
           </h3>
           <div className="space-y-2">
@@ -195,7 +195,7 @@ export default function ExamResultsPage() {
               <div key={skill.skill_tag} className="flex items-center gap-3">
                 <span
                   className={`text-sm flex-1 ${
-                    skill.percentage < 60 ? "text-band-high_risk" : "text-gray-300"
+                    skill.percentage < 60 ? "text-red-500" : "text-ikori-body"
                   }`}
                 >
                   {skill.skill_tag.replace(/_/g, " ")}
@@ -203,10 +203,10 @@ export default function ExamResultsPage() {
                 <span
                   className={`text-sm font-medium ${
                     skill.percentage < 60
-                      ? "text-band-high_risk"
+                      ? "text-red-500"
                       : skill.percentage >= 80
-                      ? "text-band-strong"
-                      : "text-gray-300"
+                      ? "text-ikori-500"
+                      : "text-ikori-body"
                   }`}
                 >
                   {Math.round(skill.percentage)}%
@@ -225,7 +225,7 @@ export default function ExamResultsPage() {
               setReviewMode(true);
               setReviewIdx(0);
             }}
-            className="w-full py-3 rounded-lg border border-accent-orange text-accent-orange font-semibold hover:bg-accent-orange/10 transition-colors"
+            className="btn-secondary w-full"
           >
             Review Wrong Answers ({wrongResponses.length})
           </button>
@@ -233,14 +233,14 @@ export default function ExamResultsPage() {
 
         <button
           onClick={() => router.push("/exam")}
-          className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold hover:bg-orange-600 transition-colors"
+          className="btn-green w-full"
         >
           Take Another Mock
         </button>
 
         <button
           onClick={() => router.push("/dashboard")}
-          className="w-full py-3 rounded-lg border border-navy-lighter text-gray-300 hover:text-white transition-colors"
+          className="btn-secondary w-full"
         >
           Back to Dashboard
         </button>

@@ -36,12 +36,12 @@ export default function DailyMissions({ missions }: DailyMissionsProps) {
   const completed = missions.filter((m) => m.completed).length;
 
   return (
-    <div className="bg-navy-light rounded-xl p-4">
+    <div className="card">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide">
+        <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide">
           Today&apos;s Missions
         </h3>
-        <span className="text-xs text-accent-gold">
+        <span className="text-xs text-ikori-500 font-medium">
           {completed} of {missions.length} complete
         </span>
       </div>
@@ -54,34 +54,34 @@ export default function DailyMissions({ missions }: DailyMissionsProps) {
             <button
               key={mission.id}
               onClick={() => router.push(MISSION_ROUTES[mission.type] || "/dashboard")}
-              className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
+              className={`w-full flex items-center gap-3 p-3 rounded-ikori-sm transition-colors ${
                 mission.completed
-                  ? "bg-band-strong/10 border border-band-strong/20"
-                  : "bg-navy hover:bg-navy-lighter border border-navy-lighter"
+                  ? "bg-ikori-50 border border-ikori-200"
+                  : "bg-white hover:bg-ikori-surface border border-ikori-border"
               }`}
             >
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   mission.completed
-                    ? "bg-band-strong/20 text-band-strong"
-                    : "bg-accent-orange/20 text-accent-orange"
+                    ? "bg-ikori-100 text-ikori-600"
+                    : "bg-ikori-50 text-ikori-500"
                 }`}
               >
                 {mission.completed ? (
-                  <CheckCircle size={16} />
+                  <CheckCircle size={18} strokeWidth={1.5} />
                 ) : (
-                  <Icon size={16} />
+                  <Icon size={18} strokeWidth={1.5} />
                 )}
               </div>
               <div className="flex-1 text-left">
                 <p
                   className={`text-sm font-medium ${
-                    mission.completed ? "text-gray-500 line-through" : "text-white"
+                    mission.completed ? "text-ikori-muted line-through" : "text-ikori-dark"
                   }`}
                 >
                   {mission.title}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-ikori-muted">
                   {mission.question_count} items | ~{mission.estimated_minutes} min
                 </p>
               </div>

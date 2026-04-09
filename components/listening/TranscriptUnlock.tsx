@@ -20,8 +20,8 @@ export default function TranscriptUnlock({
 
   if (!unlocked) {
     return (
-      <div className="bg-navy-light rounded-lg p-4 text-center">
-        <p className="text-gray-500 text-sm">
+      <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 text-center">
+        <p className="text-ikori-muted text-sm font-sans">
           Answer the question to unlock the transcript
         </p>
       </div>
@@ -29,40 +29,40 @@ export default function TranscriptUnlock({
   }
 
   return (
-    <div className="bg-navy-light rounded-lg overflow-hidden">
+    <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between p-4 text-sm text-gray-300 hover:text-white"
+        className="w-full flex items-center justify-between p-4 text-sm text-ikori-body hover:text-ikori-dark transition-colors font-sans"
       >
         <span className="font-medium">Transcript</span>
         {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 space-y-3">
+        <div className="px-4 pb-4 space-y-3 bg-ikori-50 mx-3 mb-3 rounded-ikori-sm p-4">
           {/* Japanese script */}
-          <p className="text-white leading-relaxed" style={{ fontSize: "1.1rem" }}>
+          <p className="text-ikori-dark leading-relaxed font-sans" style={{ fontSize: "1.1rem" }}>
             {script}
           </p>
 
           {/* Romaji toggle */}
           <button
             onClick={() => setShowRomaji(!showRomaji)}
-            className="text-xs text-accent-orange hover:underline"
+            className="text-xs text-ikori-500 hover:underline font-sans"
           >
             {showRomaji ? "Hide romaji" : "Show romaji"}
           </button>
 
           {showRomaji && (
-            <p className="text-sm text-gray-400 italic">
+            <p className="text-sm text-ikori-muted italic font-sans">
               (Romaji transcription not available for this clip)
             </p>
           )}
 
           {/* Bangla translation */}
           {translationBn && (
-            <div className="pt-2 border-t border-navy-lighter">
-              <p className="text-sm text-gray-500">{translationBn}</p>
+            <div className="pt-2 border-t border-ikori-border">
+              <p className="text-sm text-ikori-muted font-sans">{translationBn}</p>
             </div>
           )}
         </div>

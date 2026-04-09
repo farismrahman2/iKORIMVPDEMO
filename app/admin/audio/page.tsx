@@ -120,21 +120,21 @@ export default function AudioPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-6">Audio Manager</h1>
+      <h1 className="text-2xl font-display font-bold text-ikori-dark mb-6">Audio Manager</h1>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="bg-navy-light rounded-xl p-4 border border-navy-lighter text-center">
-          <p className="text-2xl font-bold text-white">{stats.total}</p>
-          <p className="text-xs text-gray-500">Listening Questions</p>
+        <div className="bg-white rounded-ikori p-4 border border-ikori-border text-center">
+          <p className="text-2xl font-display font-bold text-ikori-dark">{stats.total}</p>
+          <p className="text-xs text-ikori-muted">Listening Questions</p>
         </div>
-        <div className="bg-green-500/10 rounded-xl p-4 border border-green-500/20 text-center">
-          <p className="text-2xl font-bold text-green-400">{stats.withAudio}</p>
-          <p className="text-xs text-gray-500">With Audio</p>
+        <div className="bg-green-500/10 rounded-ikori p-4 border border-green-500/20 text-center">
+          <p className="text-2xl font-display font-bold text-green-400">{stats.withAudio}</p>
+          <p className="text-xs text-ikori-muted">With Audio</p>
         </div>
-        <div className="bg-red-500/10 rounded-xl p-4 border border-red-500/20 text-center">
-          <p className="text-2xl font-bold text-red-400">{stats.missing}</p>
-          <p className="text-xs text-gray-500">Missing Audio</p>
+        <div className="bg-red-500/10 rounded-ikori p-4 border border-red-500/20 text-center">
+          <p className="text-2xl font-display font-bold text-red-400">{stats.missing}</p>
+          <p className="text-xs text-ikori-muted">Missing Audio</p>
         </div>
       </div>
 
@@ -145,10 +145,10 @@ export default function AudioPage() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+              className={`px-3 py-1.5 rounded-ikori-sm text-sm transition-colors ${
                 filter === f
-                  ? "bg-accent-orange text-white"
-                  : "bg-navy-light text-gray-400 hover:text-white"
+                  ? "bg-ikori-500 text-white"
+                  : "bg-white text-ikori-muted hover:text-ikori-dark"
               }`}
             >
               {f === "missing" ? "Missing Audio" : f === "has_audio" ? "Has Audio" : "All"}
@@ -160,7 +160,7 @@ export default function AudioPage() {
           <button
             onClick={bulkGenerate}
             disabled={bulkGenerating}
-            className="px-4 py-2 rounded-lg bg-accent-orange text-white text-sm font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center gap-2"
+            className="px-4 py-2 rounded-ikori-sm bg-ikori-500 text-white text-sm font-medium hover:bg-ikori-600 disabled:opacity-50 flex items-center gap-2"
           >
             {bulkGenerating ? (
               <>
@@ -180,9 +180,9 @@ export default function AudioPage() {
       {/* Bulk Progress */}
       {bulkGenerating && (
         <div className="mb-4">
-          <div className="h-2 bg-navy-lighter rounded-full overflow-hidden">
+          <div className="h-2 bg-ikori-surface rounded-ikori-full overflow-hidden">
             <div
-              className="h-full bg-accent-orange rounded-full transition-all"
+              className="h-full bg-ikori-500 rounded-ikori-full transition-all"
               style={{
                 width: `${bulkProgress.total > 0 ? (bulkProgress.done / bulkProgress.total) * 100 : 0}%`,
               }}
@@ -193,29 +193,29 @@ export default function AudioPage() {
 
       {/* Questions List */}
       {loading ? (
-        <div className="p-8 text-center text-gray-500 animate-pulse">Loading questions...</div>
+        <div className="p-8 text-center text-ikori-muted animate-pulse">Loading questions...</div>
       ) : questions.length === 0 ? (
-        <div className="p-8 text-center text-gray-500">No questions found.</div>
+        <div className="p-8 text-center text-ikori-muted">No questions found.</div>
       ) : (
         <div className="space-y-3">
           {questions.map((q) => (
             <div
               key={q.id}
-              className="bg-navy-light rounded-xl p-4 border border-navy-lighter"
+              className="bg-white rounded-ikori p-4 border border-ikori-border"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-white truncate">{q.question_text}</p>
+                  <p className="text-sm text-ikori-dark truncate">{q.question_text}</p>
                   {q.audio_script && (
-                    <p className="text-xs text-gray-500 mt-1 italic truncate">
+                    <p className="text-xs text-ikori-muted mt-1 italic truncate">
                       Script: {q.audio_script}
                     </p>
                   )}
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-navy-lighter text-gray-400">
+                    <span className="text-xs px-2 py-0.5 rounded-ikori-full bg-ikori-surface text-ikori-muted">
                       {q.skill_tag}
                     </span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-navy-lighter text-gray-400">
+                    <span className="text-xs px-2 py-0.5 rounded-ikori-full bg-ikori-surface text-ikori-muted">
                       {q.difficulty}
                     </span>
                   </div>
@@ -226,10 +226,10 @@ export default function AudioPage() {
                     <>
                       <button
                         onClick={() => playAudio(q.audio_url!, q.id)}
-                        className={`p-2 rounded-lg transition-colors ${
+                        className={`p-2 rounded-ikori-sm transition-colors ${
                           playingId === q.id
-                            ? "bg-accent-orange text-white"
-                            : "bg-navy-lighter text-gray-400 hover:text-white"
+                            ? "bg-ikori-500 text-white"
+                            : "bg-ikori-surface text-ikori-muted hover:text-ikori-dark"
                         }`}
                       >
                         <Play size={14} />
@@ -237,7 +237,7 @@ export default function AudioPage() {
                       <button
                         onClick={() => generateAudio(q.id)}
                         disabled={generating.has(q.id)}
-                        className="p-2 rounded-lg bg-navy-lighter text-gray-400 hover:text-accent-orange disabled:opacity-50"
+                        className="p-2 rounded-ikori-sm bg-ikori-surface text-ikori-muted hover:text-ikori-500 disabled:opacity-50"
                         title="Regenerate"
                       >
                         {generating.has(q.id) ? (
@@ -251,7 +251,7 @@ export default function AudioPage() {
                     <button
                       onClick={() => generateAudio(q.id)}
                       disabled={generating.has(q.id) || !q.audio_script}
-                      className="px-3 py-1.5 rounded-lg bg-accent-orange text-white text-xs font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-ikori-sm bg-ikori-500 text-white text-xs font-medium hover:bg-ikori-600 disabled:opacity-50 flex items-center gap-1.5"
                     >
                       {generating.has(q.id) ? (
                         <>

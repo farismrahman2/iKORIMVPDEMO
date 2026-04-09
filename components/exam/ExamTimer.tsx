@@ -48,21 +48,33 @@ export default function ExamTimer({
   const seconds = remaining % 60;
   const isWarning = remaining <= 300 && remaining > 60;
   const isCritical = remaining <= 60;
+  const progressPercent = totalSeconds > 0 ? (remaining / totalSeconds) * 100 : 0;
 
   return (
-    <div
-      className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-mono text-sm font-semibold transition-colors ${
-        isCritical
-          ? "bg-red-500/20 text-red-400 animate-pulse"
-          : isWarning
-          ? "bg-yellow-500/20 text-yellow-400"
-          : "bg-navy-light text-gray-300"
-      }`}
-    >
-      <Clock size={16} />
-      <span>
-        {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
-      </span>
+    <div className="flex items-center gap-3">
+      <div
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-full font-mono text-sm font-semibold transition-colors bg-white border shadow-ikori-sm ${
+          isCritical
+            ? "border-red-300 text-red-500 animate-pulse"
+            : isWarning
+            ? "border-amber-300 text-amber-500"
+            : "border-ikori-border text-ikori-dark"
+        }`}
+      >
+        <Clock size={16} />
+        <span>
+          {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+        </span>
+      </div>
+      {/* Thin progress bar */}
+      <div className="flex-1 h-[3px] bg-ikori-100 rounded-full overflow-hidden">
+        <div
+          className={`h-full rounded-full transition-all duration-1000 ${
+            isCritical ? "bg-red-500" : isWarning ? "bg-amber-500" : "bg-ikori-500"
+          }`}
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
     </div>
   );
 }

@@ -117,8 +117,8 @@ export default function ListeningPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-pulse text-gray-400">Loading listening exercises...</div>
+      <div className="flex items-center justify-center min-h-screen bg-ikori-white">
+        <div className="animate-pulse text-ikori-muted font-sans">Loading listening exercises...</div>
       </div>
     );
   }
@@ -126,17 +126,19 @@ export default function ListeningPage() {
   if (sessionDone) {
     const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
     return (
-      <div className="px-4 py-6">
-        <h1 className="text-2xl font-bold mb-6">Session Complete</h1>
-        <div className="bg-navy-light rounded-xl p-6 text-center mb-6">
-          <p className="text-4xl font-bold text-accent-orange">{pct}%</p>
-          <p className="text-gray-400 mt-2">
-            {correct} / {total} correct
-          </p>
+      <div className="px-4 py-6 bg-ikori-white min-h-screen">
+        <h1 className="text-2xl font-bold font-display text-ikori-dark mb-6">Session Complete</h1>
+        <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-6 text-center mb-6">
+          <div className="bg-ikori-gradient-subtle rounded-ikori p-6">
+            <p className="text-4xl font-bold text-ikori-500">{pct}%</p>
+            <p className="text-ikori-muted mt-2 font-sans">
+              {correct} / {total} correct
+            </p>
+          </div>
         </div>
         <button
           onClick={loadQuestions}
-          className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold"
+          className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans"
         >
           Practice Again
         </button>
@@ -148,24 +150,24 @@ export default function ListeningPage() {
 
   if (!question) {
     return (
-      <div className="px-4 py-6">
-        <h1 className="text-2xl font-bold mb-4">Listening</h1>
+      <div className="px-4 py-6 bg-ikori-white min-h-screen">
+        <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">Listening</h1>
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
           {MODES.map((m) => (
             <button
               key={m.key}
               onClick={() => setMode(m.key)}
-              className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors font-sans ${
                 mode === m.key
-                  ? "bg-accent-orange text-white"
-                  : "bg-navy-light text-gray-400"
+                  ? "bg-ikori-500 text-white"
+                  : "bg-ikori-50 text-ikori-body"
               }`}
             >
               {m.label}
             </button>
           ))}
         </div>
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-ikori-muted font-sans">
           No listening questions available for this mode yet.
         </div>
       </div>
@@ -175,8 +177,8 @@ export default function ListeningPage() {
   const options = question.options as string[];
 
   return (
-    <div className="px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Listening</h1>
+    <div className="px-4 py-6 bg-ikori-white min-h-screen">
+      <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">Listening</h1>
 
       {/* Mode selector */}
       <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
@@ -184,10 +186,10 @@ export default function ListeningPage() {
           <button
             key={m.key}
             onClick={() => setMode(m.key)}
-            className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
+            className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors font-sans ${
               mode === m.key
-                ? "bg-accent-orange text-white"
-                : "bg-navy-light text-gray-400"
+                ? "bg-ikori-500 text-white"
+                : "bg-ikori-50 text-ikori-body"
             }`}
           >
             {m.label}
@@ -196,7 +198,7 @@ export default function ListeningPage() {
       </div>
 
       {/* Progress */}
-      <div className="flex justify-between text-sm text-gray-400 mb-4">
+      <div className="flex justify-between text-sm text-ikori-muted mb-4 font-sans">
         <span>
           Clip {currentIdx + 1} / {questions.length}
         </span>
@@ -214,15 +216,15 @@ export default function ListeningPage() {
             questionId={question.id}
           />
         ) : question.audio_script ? (
-          <div className="bg-navy-light rounded-lg p-4 text-center">
-            <p className="text-gray-400 text-sm mb-2">Audio not available</p>
-            <p className="text-white text-sm italic">{question.audio_script}</p>
+          <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4 text-center">
+            <p className="text-ikori-muted text-sm mb-2 font-sans">Audio not available</p>
+            <p className="text-ikori-dark text-sm italic font-sans">{question.audio_script}</p>
           </div>
         ) : null}
       </div>
 
       {/* Question */}
-      <p className="text-lg text-white mb-4" style={{ fontSize: "1.1rem" }}>
+      <p className="text-lg text-ikori-dark mb-4 font-sans" style={{ fontSize: "1.1rem" }}>
         {question.question_text}
       </p>
 
@@ -239,18 +241,18 @@ export default function ListeningPage() {
                 key={idx}
                 onClick={() => handleSequenceSelect(idx)}
                 disabled={showResult}
-                className={`w-full text-left px-4 py-3 rounded-lg border transition-colors flex items-center gap-3 ${
+                className={`w-full text-left p-4 rounded-ikori-sm border text-sm active:scale-[0.98] transition-all flex items-center gap-3 font-sans ${
                   showResult
                     ? sequenceOrder.indexOf(idx) === idx
-                      ? "border-green-500 bg-green-500/10 text-green-400"
-                      : "border-navy-lighter bg-navy-light text-gray-500"
+                      ? "border-green-300 bg-green-50 text-green-800"
+                      : "border-ikori-border bg-ikori-surface text-ikori-muted"
                     : isSelected
-                    ? "border-accent-orange bg-accent-orange/10 text-white"
-                    : "border-navy-lighter bg-navy-light text-gray-300 hover:border-gray-500"
+                    ? "border-ikori-500 bg-ikori-50 text-ikori-dark"
+                    : "border-ikori-border bg-white text-ikori-dark hover:border-ikori-300"
                 }`}
               >
                 {isSelected && (
-                  <span className="w-6 h-6 rounded-full bg-accent-orange text-white flex items-center justify-center text-sm font-bold">
+                  <span className="w-6 h-6 rounded-full bg-ikori-500 text-white flex items-center justify-center text-sm font-bold">
                     {orderNum + 1}
                   </span>
                 )}
@@ -264,32 +266,32 @@ export default function ListeningPage() {
         <div className="space-y-3 mb-6">
           {options.map((option, idx) => {
             let className =
-              "w-full text-left px-4 py-3 rounded-lg border transition-colors flex items-center gap-3 ";
+              "w-full text-left p-4 rounded-ikori-sm border text-sm active:scale-[0.98] transition-all flex items-center gap-3 font-sans ";
 
             if (showResult) {
               if (idx === question.correct_answer) {
-                className += "border-green-500 bg-green-500/10 text-green-400";
+                className += "border-green-300 bg-green-50 text-green-800";
               } else if (idx === selected && idx !== question.correct_answer) {
-                className += "border-red-500 bg-red-500/10 text-red-400";
+                className += "border-red-300 bg-red-50 text-red-700";
               } else {
-                className += "border-navy-lighter bg-navy-light text-gray-500";
+                className += "border-ikori-border bg-ikori-surface text-ikori-muted";
               }
             } else {
               className +=
-                "border-navy-lighter bg-navy-light text-gray-300 hover:border-gray-500";
+                "border-ikori-border bg-white text-ikori-dark hover:border-ikori-300";
             }
 
             return (
               <button key={idx} onClick={() => handleSelect(idx)} className={className}>
-                <span className="font-medium text-gray-500 w-6">
+                <span className="font-medium text-ikori-muted w-6">
                   {String.fromCharCode(65 + idx)}
                 </span>
                 <span>{option}</span>
                 {showResult && idx === question.correct_answer && (
-                  <CheckCircle size={18} className="ml-auto text-green-400" />
+                  <CheckCircle size={18} className="ml-auto text-green-600" />
                 )}
                 {showResult && idx === selected && idx !== question.correct_answer && (
-                  <XCircle size={18} className="ml-auto text-red-400" />
+                  <XCircle size={18} className="ml-auto text-red-600" />
                 )}
               </button>
             );
@@ -300,9 +302,9 @@ export default function ListeningPage() {
       {/* Explanation + Transcript (after answering) */}
       {showResult && (
         <div className="space-y-4 mb-6">
-          <div className="bg-navy-light rounded-lg p-4">
-            <p className="text-sm text-gray-300">{question.explanation_en}</p>
-            <p className="text-sm text-gray-500 mt-1">{question.explanation_bn}</p>
+          <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-4">
+            <p className="text-sm text-ikori-body font-sans">{question.explanation_en}</p>
+            <p className="text-sm text-ikori-muted mt-1 font-sans">{question.explanation_bn}</p>
           </div>
 
           {/* Transcript unlock for transcript mode */}
@@ -317,7 +319,7 @@ export default function ListeningPage() {
 
           <button
             onClick={nextQuestion}
-            className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold"
+            className="btn-primary w-full py-3 rounded-ikori-sm font-semibold font-sans"
           >
             {currentIdx === questions.length - 1 ? "Finish" : "Next Clip"}
           </button>

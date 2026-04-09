@@ -34,8 +34,8 @@ export default function SkillRadar({ skills, onSkillClick }: SkillRadarProps) {
 
   if (count === 0) {
     return (
-      <div className="bg-navy-light rounded-xl p-6 text-center">
-        <p className="text-gray-500">Complete a diagnostic to see your skill radar.</p>
+      <div className="card text-center">
+        <p className="text-ikori-muted">Complete a diagnostic to see your skill radar.</p>
       </div>
     );
   }
@@ -50,7 +50,7 @@ export default function SkillRadar({ skills, onSkillClick }: SkillRadarProps) {
   }
 
   function getColor(score: number) {
-    if (score >= 80) return "#22C55E";
+    if (score >= 80) return "#10B981";
     if (score >= 60) return "#F59E0B";
     return "#EF4444";
   }
@@ -67,7 +67,7 @@ export default function SkillRadar({ skills, onSkillClick }: SkillRadarProps) {
         key={i}
         points={points}
         fill="none"
-        stroke="#1A2A44"
+        stroke="#E5E7EB"
         strokeWidth="1"
       />
     );
@@ -83,7 +83,7 @@ export default function SkillRadar({ skills, onSkillClick }: SkillRadarProps) {
         y1={center}
         x2={p.x}
         y2={p.y}
-        stroke="#1A2A44"
+        stroke="#E5E7EB"
         strokeWidth="1"
       />
     );
@@ -140,8 +140,8 @@ export default function SkillRadar({ skills, onSkillClick }: SkillRadarProps) {
   });
 
   return (
-    <div className="bg-navy-light rounded-xl p-4">
-      <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+    <div className="card">
+      <h3 className="text-sm font-semibold text-ikori-muted uppercase tracking-wide mb-3">
         Skill Radar
       </h3>
       <svg
@@ -152,8 +152,8 @@ export default function SkillRadar({ skills, onSkillClick }: SkillRadarProps) {
         {axisLines}
         <polygon
           points={dataPoints}
-          fill="rgba(249, 115, 22, 0.15)"
-          stroke="#F97316"
+          fill="rgba(16, 185, 129, 0.15)"
+          stroke="#10B981"
           strokeWidth="2"
         />
         {dots}

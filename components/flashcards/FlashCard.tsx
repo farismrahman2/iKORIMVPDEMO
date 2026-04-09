@@ -19,24 +19,24 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
       case "classic":
         return (
           <div className="text-center">
-            <p className="text-3xl font-bold text-white mb-2">{word.word}</p>
-            <p className="text-xl text-gray-400">{word.kana}</p>
+            <p className="text-3xl font-bold text-ikori-dark mb-2">{word.word}</p>
+            <p className="text-xl text-ikori-muted">{word.kana}</p>
           </div>
         );
       case "reverse":
         return (
           <div className="text-center">
-            <p className="text-2xl font-bold text-white">{word.meaning_bn}</p>
-            <p className="text-lg text-gray-400 mt-1">{word.meaning_en}</p>
+            <p className="text-2xl font-bold text-ikori-dark">{word.meaning_bn}</p>
+            <p className="text-lg text-ikori-muted mt-1">{word.meaning_en}</p>
           </div>
         );
       case "context":
         return (
           <div className="text-center">
-            <p className="text-xl text-white leading-relaxed">
+            <p className="text-xl text-ikori-dark leading-relaxed">
               {word.example_sentence_jp.replace(word.word, "______")}
             </p>
-            <p className="text-sm text-gray-500 mt-3">What word fills the blank?</p>
+            <p className="text-sm text-ikori-muted mt-3">What word fills the blank?</p>
           </div>
         );
     }
@@ -47,29 +47,29 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
       case "classic":
         return (
           <div className="text-center space-y-3">
-            <p className="text-xl font-bold text-accent-orange">{word.meaning_bn}</p>
-            <p className="text-lg text-gray-300">{word.meaning_en}</p>
-            <p className="text-sm text-gray-500 italic">{word.example_sentence_jp}</p>
+            <p className="text-xl font-bold text-ikori-700">{word.meaning_bn}</p>
+            <p className="text-lg text-ikori-body">{word.meaning_en}</p>
+            <p className="text-sm text-ikori-muted italic">{word.example_sentence_jp}</p>
             {word.example_sentence_bn && (
-              <p className="text-sm text-gray-600">{word.example_sentence_bn}</p>
+              <p className="text-sm text-ikori-muted">{word.example_sentence_bn}</p>
             )}
           </div>
         );
       case "reverse":
         return (
           <div className="text-center space-y-3">
-            <p className="text-3xl font-bold text-white">{word.word}</p>
-            <p className="text-xl text-gray-400">{word.kana}</p>
-            <p className="text-sm text-gray-500 italic">{word.example_sentence_jp}</p>
+            <p className="text-3xl font-bold text-ikori-dark">{word.word}</p>
+            <p className="text-xl text-ikori-muted">{word.kana}</p>
+            <p className="text-sm text-ikori-muted italic">{word.example_sentence_jp}</p>
           </div>
         );
       case "context":
         return (
           <div className="text-center space-y-3">
-            <p className="text-2xl font-bold text-accent-orange">{word.word}</p>
-            <p className="text-lg text-gray-400">{word.kana}</p>
-            <p className="text-sm text-gray-300">{word.meaning_bn}</p>
-            <p className="text-sm text-gray-500 italic">{word.example_sentence_jp}</p>
+            <p className="text-2xl font-bold text-ikori-700">{word.word}</p>
+            <p className="text-lg text-ikori-muted">{word.kana}</p>
+            <p className="text-sm text-ikori-body">{word.meaning_bn}</p>
+            <p className="text-sm text-ikori-muted italic">{word.example_sentence_jp}</p>
           </div>
         );
     }
@@ -90,16 +90,16 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
       >
         {/* Front */}
         <div
-          className="bg-navy-light rounded-2xl p-8 min-h-[250px] flex flex-col items-center justify-center border border-navy-lighter"
+          className="bg-white rounded-ikori border border-ikori-border shadow-ikori p-8 min-h-[280px] flex flex-col items-center justify-center"
           style={{ backfaceVisibility: "hidden" }}
         >
           {getFront()}
-          <p className="text-xs text-gray-600 mt-6">Tap to flip</p>
+          <p className="text-xs text-ikori-muted mt-6">Tap to flip</p>
         </div>
 
         {/* Back */}
         <div
-          className="absolute inset-0 bg-navy-light rounded-2xl p-8 min-h-[250px] flex flex-col items-center justify-center border border-accent-orange/30"
+          className="absolute inset-0 bg-ikori-gradient-subtle rounded-ikori border border-ikori-200 p-8 min-h-[280px] flex flex-col items-center justify-center"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
@@ -113,7 +113,7 @@ export default function FlashCard({ word, mode }: FlashCardProps) {
                 const audio = new Audio(word.audio_url!);
                 audio.play().catch(() => {});
               }}
-              className="mt-4 text-accent-orange hover:text-orange-400"
+              className="mt-4 text-ikori-500 hover:text-ikori-400"
             >
               <Volume2 size={24} />
             </button>

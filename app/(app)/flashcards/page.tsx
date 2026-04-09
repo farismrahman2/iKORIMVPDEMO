@@ -149,44 +149,46 @@ export default function FlashcardsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-pulse text-gray-400">Loading flashcards...</div>
+      <div className="flex items-center justify-center min-h-screen bg-ikori-white">
+        <div className="animate-pulse text-ikori-muted font-sans">Loading flashcards...</div>
       </div>
     );
   }
 
   if (allDone) {
     return (
-      <div className="px-4 py-6">
-        <h1 className="text-2xl font-bold mb-6">Flashcards</h1>
+      <div className="px-4 py-6 bg-ikori-white min-h-screen">
+        <h1 className="text-2xl font-bold font-display text-ikori-dark mb-6">Flashcards</h1>
 
-        <div className="bg-navy-light rounded-xl p-8 text-center mb-6">
-          {reviewed > 0 ? (
-            <>
-              <p className="text-4xl font-bold text-band-strong mb-2">All done!</p>
-              <p className="text-gray-400">
-                You reviewed {reviewed} card{reviewed !== 1 ? "s" : ""} today.
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-2xl font-bold text-white mb-2">All caught up!</p>
-              <p className="text-gray-400">No cards due for review today.</p>
-            </>
-          )}
+        <div className="bg-white rounded-ikori border border-ikori-border shadow-ikori-sm p-8 text-center mb-6">
+          <div className="bg-ikori-gradient-subtle rounded-ikori p-6">
+            {reviewed > 0 ? (
+              <>
+                <p className="text-4xl font-bold text-ikori-500 mb-2 font-display">All done!</p>
+                <p className="text-ikori-muted font-sans">
+                  You reviewed {reviewed} card{reviewed !== 1 ? "s" : ""} today.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-2xl font-bold text-ikori-dark mb-2 font-display">All caught up!</p>
+                <p className="text-ikori-muted font-sans">No cards due for review today.</p>
+              </>
+            )}
+          </div>
         </div>
 
         {activeCount < 50 && (
           <button
             onClick={addNewWords}
             disabled={adding}
-            className="w-full py-3 rounded-lg bg-accent-orange text-white font-semibold disabled:opacity-50"
+            className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans disabled:opacity-50"
           >
             {adding ? "Adding..." : "Add 10 New Words"}
           </button>
         )}
 
-        <p className="text-center text-gray-500 text-sm mt-4">
+        <p className="text-center text-ikori-muted text-sm mt-4 font-sans">
           {activeCount} active flashcards
         </p>
       </div>
@@ -197,10 +199,10 @@ export default function FlashcardsPage() {
   if (!card || !card.vocabulary) return null;
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-6 bg-ikori-white min-h-screen">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Flashcards</h1>
-        <span className="text-sm text-gray-400">
+        <h1 className="text-2xl font-bold font-display text-ikori-dark">Flashcards</h1>
+        <span className="text-sm text-ikori-muted font-sans">
           {queue.length - currentIdx} cards left
         </span>
       </div>
@@ -211,10 +213,10 @@ export default function FlashcardsPage() {
           <button
             key={m}
             onClick={() => setCardMode(m)}
-            className={`px-3 py-1.5 rounded-full text-sm capitalize transition-colors ${
+            className={`px-3 py-1.5 rounded-full text-sm capitalize transition-colors font-sans ${
               cardMode === m
-                ? "bg-accent-orange text-white"
-                : "bg-navy-light text-gray-400"
+                ? "bg-ikori-500 text-white"
+                : "bg-ikori-50 text-ikori-body"
             }`}
           >
             {m}
@@ -229,16 +231,16 @@ export default function FlashcardsPage() {
 
       {/* Confidence buttons */}
       <div className="mb-4">
-        <p className="text-sm text-gray-500 text-center mb-3">
+        <p className="text-sm text-ikori-muted text-center mb-3 font-sans">
           How well did you know this?
         </p>
         <ConfidenceButtons onRate={handleRate} />
       </div>
 
       {/* Progress */}
-      <div className="h-1 bg-navy-light rounded-full overflow-hidden mt-6">
+      <div className="h-1 bg-ikori-50 rounded-full overflow-hidden mt-6">
         <div
-          className="h-full bg-accent-orange rounded-full transition-all"
+          className="h-full bg-ikori-500 rounded-full transition-all"
           style={{
             width: `${((currentIdx + 1) / queue.length) * 100}%`,
           }}
