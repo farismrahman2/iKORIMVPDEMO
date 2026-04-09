@@ -29,6 +29,23 @@ export async function POST(request: NextRequest) {
 
     const blueprint = getBlueprint(exam_type, section_filter);
 
+    // Ensure user profile exists (auto-create if missing)
+    const { data: existingProfile } = await supabase
+      .from("user_profiles")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    if (!existingProfile) {
+      await supabase.from("user_profiles").insert({
+        id: user.id,
+        name: user.user_metadata?.name || user.email?.split("@")[0] || "Learner",
+        onboarded: false,
+        streak: 0,
+        pass_probability: 0,
+      });
+    }
+
     // Create session
     const { data: session, error: sessionError } = await supabase
       .from("exam_sessions")
@@ -43,8 +60,9 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (sessionError || !session) {
+      console.error("Session creation error:", sessionError);
       return NextResponse.json(
-        { error: "Failed to create session" },
+        { error: "Failed to create session", details: sessionError?.message },
         { status: 500 }
       );
     }

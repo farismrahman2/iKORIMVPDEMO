@@ -40,12 +40,28 @@ export default function DashboardPage() {
         return;
       }
 
-      // Load profile
-      const { data: profileData } = await supabase
+      // Load profile (auto-create if missing)
+      let { data: profileData } = await supabase
         .from("user_profiles")
         .select("*")
         .eq("id", user.id)
         .single();
+
+      if (!profileData) {
+        // Profile missing — create it now
+        const { data: newProfile } = await supabase
+          .from("user_profiles")
+          .insert({
+            id: user.id,
+            name: user.user_metadata?.name || user.email?.split("@")[0] || "Learner",
+            onboarded: false,
+            streak: 0,
+            pass_probability: 0,
+          })
+          .select()
+          .single();
+        profileData = newProfile;
+      }
 
       if (profileData) {
         setProfile(profileData as UserProfile);

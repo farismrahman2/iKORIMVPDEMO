@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   description: "JLPT N5 Pass Readiness Trainer for Bangladeshi Learners",
   manifest: "/manifest.json",
   appleWebApp: {
-    capable: true,
     statusBarStyle: "black-translucent",
     title: "iKORI N5",
   },
