@@ -360,6 +360,12 @@ function VocabSessionComplete({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mission_type: 'vocab_drill' }),
     });
+    // Also mark grammar_drill since grammar practice uses vocab page
+    fetch('/api/missions/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mission_type: 'grammar_drill' }),
+    });
   }, []);
 
   return (
@@ -378,6 +384,12 @@ function VocabSessionComplete({
         className="btn-green w-full py-3 rounded-ikori-sm font-semibold font-sans"
       >
         {t('practice_again')}
+      </button>
+      <button
+        onClick={() => window.location.href = "/dashboard"}
+        className="btn-secondary w-full mt-3"
+      >
+        {t('back_dashboard')}
       </button>
     </div>
   );

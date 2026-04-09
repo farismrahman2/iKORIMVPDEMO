@@ -286,11 +286,12 @@ function FlashcardsAllDone({
         </button>
       )}
 
-      {reviewed > 0 && (
-        <p className="text-center text-ikori-muted text-sm mt-4 font-sans">
-          {activeCount} {t('flashcards_label')}
-        </p>
-      )}
+      <button
+        onClick={() => window.location.href = "/dashboard"}
+        className="btn-secondary w-full mt-3"
+      >
+        {t('back_dashboard')}
+      </button>
     </div>
   );
 }

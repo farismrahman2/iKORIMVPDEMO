@@ -44,7 +44,7 @@ export async function GET() {
     // Always recommend flashcards
     missions.push({
       id: "flashcard_session",
-      type: "flashcards",
+      type: "flashcard_session",
       title: "Review Flashcards",
       description: "Review due flashcards to strengthen vocabulary retention",
       skill_tags: ["word_meaning", "kana_recognition"],

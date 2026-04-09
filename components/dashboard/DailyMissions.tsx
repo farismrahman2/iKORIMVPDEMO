@@ -18,7 +18,7 @@ interface DailyMissionsProps {
 }
 
 const MISSION_ICONS: Record<string, typeof Layers> = {
-  flashcards: Layers,
+  flashcard_session: Layers,
   vocab_drill: BookOpen,
   listening_quiz: Headphones,
   grammar_drill: PenLine,
@@ -26,7 +26,7 @@ const MISSION_ICONS: Record<string, typeof Layers> = {
 };
 
 const MISSION_ROUTES: Record<string, string> = {
-  flashcards: "/flashcards",
+  flashcard_session: "/flashcards",
   vocab_drill: "/vocab",
   listening_quiz: "/listening",
   grammar_drill: "/vocab",
@@ -34,7 +34,7 @@ const MISSION_ROUTES: Record<string, string> = {
 };
 
 const MISSION_TITLE_KEYS: Record<string, TranslationKey> = {
-  flashcards: "flashcard_session",
+  flashcard_session: "flashcard_session",
   vocab_drill: "vocab_drill",
   listening_quiz: "listening_quiz",
   grammar_drill: "grammar_drill",

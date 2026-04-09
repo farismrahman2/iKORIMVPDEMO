@@ -238,7 +238,7 @@ export interface DailyRecommendation {
 
 export interface Mission {
   id: string;
-  type: "flashcards" | "vocab_drill" | "listening_quiz" | "grammar_drill" | "mock_exam";
+  type: "flashcard_session" | "vocab_drill" | "listening_quiz" | "grammar_drill" | "mock_exam" | "weak_skill_drill";
   title: string;
   description: string;
   skill_tags: SkillTag[];

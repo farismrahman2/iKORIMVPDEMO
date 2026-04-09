@@ -358,6 +358,12 @@ function ListeningSessionComplete({
       >
         {t('practice_again')}
       </button>
+      <button
+        onClick={() => window.location.href = "/dashboard"}
+        className="btn-secondary w-full mt-3"
+      >
+        {t('back_dashboard')}
+      </button>
     </div>
   );
 }
