@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Upload, Database, Headphones, BarChart3, ArrowLeft } from "lucide-react";
+import { Upload, Database, Headphones, BarChart3, ArrowLeft, Layout, MessageCircle, CreditCard } from "lucide-react";
 
 const ADMIN_NAV = [
   { href: "/admin/import", label: "Import", icon: Upload },
   { href: "/admin/content", label: "Content", icon: Database },
   { href: "/admin/audio", label: "Audio", icon: Headphones },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/admin/landing", label: "Landing Page", icon: Layout },
+  { href: "/admin/support", label: "Support", icon: MessageCircle },
+  { href: "/admin/refunds", label: "Refunds", icon: CreditCard },
 ];
 
 interface AdminSidebarProps {
