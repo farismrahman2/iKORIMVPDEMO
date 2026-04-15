@@ -6,6 +6,7 @@ import { useLanguage } from "@/lib/language-context";
 import type { ExamType, SectionType } from "@/types";
 import { Clock, Zap, FileText, BookOpen, PenLine, Headphones } from "lucide-react";
 import type { TranslationKey } from "@/lib/i18n";
+import UpgradePrompt from "@/components/UpgradePrompt";
 
 interface ExamOption {
   type: ExamType;
@@ -71,10 +72,25 @@ const EXAM_OPTIONS: ExamOption[] = [
 
 export default function ExamPage() {
   const [creating, setCreating] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const router = useRouter();
   const { t } = useLanguage();
 
   async function startExam(option: ExamOption) {
+    // Check access for full mock exam
+    if (option.type === "full") {
+      const res = await fetch("/api/access/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ module: "mock_exam" }),
+      });
+      const { allowed } = await res.json();
+      if (!allowed) {
+        setShowUpgrade(true);
+        return;
+      }
+    }
+
     setCreating(true);
 
     try {
@@ -141,6 +157,13 @@ export default function ExamPage() {
           </div>
         </div>
       )}
+
+      <UpgradePrompt
+        isOpen={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        module="mock_exam"
+        limit={1}
+      />
     </div>
   );
 }

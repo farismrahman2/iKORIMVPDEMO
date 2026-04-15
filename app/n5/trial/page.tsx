@@ -79,25 +79,11 @@ export default function TrialPage() {
   }
 
   function finishTrial() {
-    // Calculate scores
-    const correct = answers.length > 0
-      ? answers.filter((a) => a.is_correct).length + (selected !== null && selected === questions[currentIdx]?.correct_answer ? 1 : 0)
-      : 0;
+    // answers already contains the last question (added in handleSelect)
+    const allAnswers = [...answers];
+    const correct = allAnswers.filter((a) => a.is_correct).length;
     const total = questions.length;
     const score = total > 0 ? Math.round((correct / total) * 100) : 0;
-
-    // Calculate section breakdown
-    const allAnswers = [...answers];
-    if (selected !== null && currentIdx === questions.length - 1) {
-      const q = questions[currentIdx];
-      allAnswers.push({
-        question_id: q.id,
-        user_answer: selected,
-        is_correct: selected === q.correct_answer,
-        skill_tag: q.skill_tag,
-        section: q.section,
-      });
-    }
 
     const sections: Record<string, { correct: number; total: number }> = {};
     for (const a of allAnswers) {

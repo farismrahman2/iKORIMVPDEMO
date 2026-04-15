@@ -7,6 +7,7 @@ import AudioPlayer from "@/components/listening/AudioPlayer";
 import TranscriptUnlock from "@/components/listening/TranscriptUnlock";
 import type { Question, SkillTag } from "@/types";
 import { CheckCircle, XCircle } from "lucide-react";
+import UpgradePrompt from "@/components/UpgradePrompt";
 
 type ListeningMode = "mcq" | "sequence" | "fill_blank" | "choose_reply" | "transcript";
 
@@ -39,8 +40,20 @@ export default function ListeningPage() {
   const [sessionDone, setSessionDone] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sequenceOrder, setSequenceOrder] = useState<number[]>([]);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    fetch("/api/access/check", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ module: "listening" }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (!d.allowed) setShowUpgrade(true); })
+      .catch(() => {});
+  }, []);
 
   const loadQuestions = useCallback(async () => {
     setLoading(true);
@@ -123,6 +136,23 @@ export default function ListeningPage() {
       <div className="flex items-center justify-center min-h-screen bg-ikori-white">
         <div className="animate-pulse text-ikori-muted font-sans">Loading listening exercises...</div>
       </div>
+    );
+  }
+
+  if (showUpgrade) {
+    return (
+      <>
+        <div className="px-4 py-6 bg-ikori-white min-h-screen">
+          <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">{t('listening')}</h1>
+          <p className="text-ikori-muted text-sm">You&apos;ve used your free listening session this week.</p>
+        </div>
+        <UpgradePrompt
+          isOpen={true}
+          onClose={() => setShowUpgrade(false)}
+          module="listening"
+          limit={1}
+        />
+      </>
     );
   }
 

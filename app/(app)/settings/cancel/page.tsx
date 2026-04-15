@@ -21,14 +21,18 @@ export default function CancelPage() {
   async function handleCancel() {
     setCancelling(true);
     try {
-      await fetch("/api/subscription/cancel", {
+      const res = await fetch("/api/subscription/cancel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason }),
       });
-      router.push("/settings");
+      if (res.ok) {
+        router.push("/settings");
+      } else {
+        alert("Failed to cancel subscription. Please try again.");
+      }
     } catch {
-      // Silently fail
+      alert("Network error. Please try again.");
     }
     setCancelling(false);
   }

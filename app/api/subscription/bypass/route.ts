@@ -17,6 +17,13 @@ export async function POST(request: NextRequest) {
     const daysToAdd = validPlan === "exam_prep" ? 90 : 30;
     const amount = validPlan === "exam_prep" ? 999 : 499;
 
+    // Cancel any existing active subscription first
+    await supabase
+      .from("subscriptions")
+      .update({ status: "cancelled" })
+      .eq("user_id", user.id)
+      .eq("status", "active");
+
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + daysToAdd);
 

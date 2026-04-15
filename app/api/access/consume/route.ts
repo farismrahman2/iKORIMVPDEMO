@@ -22,6 +22,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Access consume error:", error);
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ error: "Failed to record session" }, { status: 500 });
   }
 }

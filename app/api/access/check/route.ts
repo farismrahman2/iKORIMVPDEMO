@@ -22,6 +22,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Access check error:", error);
-    return NextResponse.json({ allowed: true, reason: "ok" });
+    return NextResponse.json({ allowed: false, reason: "error" }, { status: 500 });
   }
 }

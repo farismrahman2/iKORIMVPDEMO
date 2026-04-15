@@ -5,6 +5,7 @@ import { createClientComponentClient } from "@/lib/supabase";
 import { useLanguage } from "@/lib/language-context";
 import type { Vocabulary } from "@/types";
 import { Volume2, CheckCircle, XCircle } from "lucide-react";
+import UpgradePrompt from "@/components/UpgradePrompt";
 
 type VocabMode = "recognition" | "recall" | "reading" | "usage";
 
@@ -45,8 +46,20 @@ export default function VocabPage() {
   const [correctIdx, setCorrectIdx] = useState(0);
   const [sessionDone, setSessionDone] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    fetch("/api/access/check", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ module: "vocab" }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (!d.allowed) setShowUpgrade(true); })
+      .catch(() => {});
+  }, []);
 
   const loadWords = useCallback(async () => {
     setLoading(true);
@@ -167,6 +180,23 @@ export default function VocabPage() {
       <div className="flex items-center justify-center min-h-screen bg-ikori-white">
         <div className="animate-pulse text-ikori-muted font-sans">Loading vocabulary...</div>
       </div>
+    );
+  }
+
+  if (showUpgrade) {
+    return (
+      <>
+        <div className="px-4 py-6 bg-ikori-white min-h-screen">
+          <h1 className="text-2xl font-bold font-display text-ikori-dark mb-4">{t('vocabulary')}</h1>
+          <p className="text-ikori-muted text-sm">You&apos;ve used all your free vocab sessions this week.</p>
+        </div>
+        <UpgradePrompt
+          isOpen={true}
+          onClose={() => setShowUpgrade(false)}
+          module="vocab"
+          limit={3}
+        />
+      </>
     );
   }
 
