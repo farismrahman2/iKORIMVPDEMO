@@ -61,9 +61,14 @@ export default async function LandingPage() {
             <a href="#pricing" className="hover:text-ikori-dark transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-ikori-dark transition-colors">FAQ</a>
           </div>
-          <Link href="/n5/trial" className="btn-primary text-xs px-4 py-2">
-            Try Free
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/login" className="text-sm text-ikori-muted hover:text-ikori-dark transition-colors font-medium">
+              Sign In
+            </Link>
+            <Link href="/n5/trial" className="btn-primary text-xs px-4 py-2">
+              Try Free
+            </Link>
+          </div>
         </div>
       </nav>
 
