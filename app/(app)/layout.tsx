@@ -8,6 +8,7 @@ import {
   BookOpen,
   Layers,
   Headphones,
+  Settings,
 } from "lucide-react";
 import { LanguageProvider, useLanguage } from "@/lib/language-context";
 import type { TranslationKey } from "@/lib/i18n";
@@ -18,6 +19,7 @@ const NAV_ITEMS: { href: string; labelKey: TranslationKey; icon: typeof LayoutDa
   { href: "/vocab", labelKey: "nav_vocab", icon: BookOpen },
   { href: "/flashcards", labelKey: "nav_cards", icon: Layers },
   { href: "/listening", labelKey: "nav_listen", icon: Headphones },
+  { href: "/settings", labelKey: "nav_settings", icon: Settings },
 ];
 
 function AppContent({ children }: { children: React.ReactNode }) {

@@ -7,6 +7,7 @@ export const translations = {
   nav_vocab: { en: "Vocab", bn: "শব্দভাণ্ডার" },
   nav_cards: { en: "Cards", bn: "কার্ড" },
   nav_listen: { en: "Listen", bn: "শোনা" },
+  nav_settings: { en: "Settings", bn: "সেটিংস" },
 
   // Dashboard
   good_morning: { en: "Good morning", bn: "শুভ সকাল" },

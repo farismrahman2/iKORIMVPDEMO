@@ -23,17 +23,21 @@ export default async function LandingPage() {
     redirect("/dashboard");
   }
 
-  // Fetch landing page config
-  const adminDb = createServiceRoleClient();
-  const { data: configRows } = await adminDb
-    .from("landing_page_config")
-    .select("key, value");
-
+  // Fetch landing page config (gracefully handle missing table/keys)
   const config: Record<string, string> = {};
-  if (configRows) {
-    for (const row of configRows) {
-      config[row.key] = row.value;
+  try {
+    const adminDb = createServiceRoleClient();
+    const { data: configRows } = await adminDb
+      .from("landing_page_config")
+      .select("key, value");
+
+    if (configRows) {
+      for (const row of configRows) {
+        config[row.key] = row.value;
+      }
     }
+  } catch {
+    // Table may not exist yet — render with defaults
   }
 
   // Build testimonials
