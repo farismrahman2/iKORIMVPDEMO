@@ -282,3 +282,111 @@ export interface AdminStats {
   questions_by_section: Record<string, number>;
   questions_with_audio: number;
 }
+
+// === User Journey Types ===
+
+export type UserTier = "anonymous" | "free" | "paid";
+export type SubscriptionPlan = "monthly" | "exam_prep";
+export type SubscriptionStatus = "active" | "expired" | "cancelled" | "payment_failed" | "refunded";
+export type SupportTicketStatus = "open" | "in_progress" | "resolved";
+
+export interface Subscription {
+  id: string;
+  user_id: string;
+  plan: SubscriptionPlan;
+  status: SubscriptionStatus;
+  started_at: string;
+  expires_at: string;
+  payment_method: "bkash" | "ssl" | "bypass";
+  amount_bdt: number | null;
+  is_refundable: boolean;
+  refunded_at: string | null;
+  cancelled_at: string | null;
+  cancel_reason: string | null;
+  created_at: string;
+}
+
+export interface FreemiumSessionCount {
+  id: string;
+  user_id: string;
+  module: string;
+  week_start_date: string;
+  count: number;
+}
+
+export interface TrialEvent {
+  id: string;
+  event_type: string;
+  readiness_band: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  ip_hash: string | null;
+  created_at: string;
+}
+
+export interface ReferralEvent {
+  id: string;
+  referrer_id: string | null;
+  referred_id: string | null;
+  converted_to_paid: boolean;
+  created_at: string;
+}
+
+export interface SupportTicket {
+  id: string;
+  user_id: string;
+  category: string;
+  message: string;
+  status: SupportTicketStatus;
+  admin_reply: string | null;
+  created_at: string;
+  resolved_at: string | null;
+}
+
+export interface RetentionOffer {
+  id: string;
+  user_id: string;
+  offer_type: string;
+  discount_pct: number;
+  valid_until: string | null;
+  used: boolean;
+  created_at: string;
+}
+
+export interface LandingPageConfig {
+  key: string;
+  value: string;
+  updated_at: string;
+}
+
+export interface NotificationQueueItem {
+  id: string;
+  user_id: string;
+  type: string;
+  channel: string;
+  message: string | null;
+  scheduled_at: string;
+  sent_at: string | null;
+  created_at: string;
+}
+
+export interface TrialAnswer {
+  question_id: string;
+  user_answer: number;
+  is_correct: boolean;
+  skill_tag: string;
+  section: string;
+}
+
+export interface TrialResult {
+  weighted_score: number;
+  readiness_band: ReadinessBand;
+  section_scores: {
+    vocab: number;
+    grammar_reading: number;
+    listening: number;
+  };
+  answers: TrialAnswer[];
+  completed_at: string;
+}

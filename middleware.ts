@@ -39,7 +39,11 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
+
+  // Auth pages: redirect logged-in users to dashboard
   const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/signup");
+
+  // Protected pages: require authentication
   const isProtectedPage =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/exam") ||
@@ -47,7 +51,19 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/flashcards") ||
     pathname.startsWith("/listening") ||
     pathname.startsWith("/progress") ||
+    pathname.startsWith("/referral") ||
+    pathname.startsWith("/support") ||
+    pathname.startsWith("/settings") ||
     pathname.startsWith("/admin");
+
+  // Public pages: /, /n5/trial, /n5/checkout — no auth required
+
+  // Authenticated users on root → go to dashboard
+  if (user && pathname === "/") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
 
   if (!user && isProtectedPage) {
     const url = request.nextUrl.clone();
