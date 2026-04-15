@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Check, Shield } from "lucide-react";
 import Link from "next/link";
@@ -19,7 +19,7 @@ const FEATURES = [
   "Priority support",
 ];
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<"monthly" | "exam_prep">(
@@ -143,5 +143,17 @@ export default function CheckoutPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="border-2 border-ikori-200 border-t-ikori-500 rounded-full w-8 h-8 animate-spin" />
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }
